@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import pprint
 from enum import Enum
+import json
 
 class Refeicao(Enum):
     ALMOCO = "Almoço"
@@ -27,10 +28,11 @@ URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 def main():
     cardapio = cardapio_por_data("2017-05-22")
 
-    pprint.pprint(cardapio)
+    # pprint.pprint(cardapio)
+    string = json.dumps(cardapio, indent=4, ensure_ascii=False)
+    print(string)
 
-
-# recebe data no formato "AAAA-MM-DD" e retorna o cardapio daquele dia, caso tenha um.
+# recebe data no formato "AAAA-MM-DD" e retorna um dicionario com o cardapio daquele dia, caso tenha um.
 def cardapio_por_data(data):
     res = requests.get(URL_TEMPLATE+data)
 
