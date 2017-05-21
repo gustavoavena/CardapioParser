@@ -86,8 +86,3 @@ def preenche_refeicao(cardapio_do_dia, refeicao, soup):
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
