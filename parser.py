@@ -57,7 +57,7 @@ def pega_salada_sobremesa_suco(items):
     for i, alim in enumerate(alimentos):
         tag = alimentos[i].upper() + ":"
         valor = [s.replace(tag, "") for s in items if tag in s][0]
-        cardapio[alimentos[i]] = valor
+        cardapio[alimentos[i]] = valor.capitalize()
         items = [s for s in items if tag not in s]
 
 
@@ -72,13 +72,13 @@ def preenche_refeicao(cardapio_do_dia, refeicao, soup):
     cardapio, items = pega_salada_sobremesa_suco(items)
 
     # pega tipo de arroz:
-    cardapio["arroz_feijao"] = items.pop(0)
+    cardapio["arroz_feijao"] = items.pop(0).capitalize()
 
     # observacoes
-    cardapio["observacoes"] = items.pop().replace("Observações:  ", "")
+    cardapio["observacoes"] = items.pop().replace("Observações:  ", "").title()
 
     # prato principal
-    cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", ""), *items] # o que sobrar faz parte do prato principal
+    cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize(), *[i.capitalize() for i in items]] # o que sobrar faz parte do prato principal
 
     cardapio_do_dia[refeicao] = cardapio
     return cardapio_do_dia
