@@ -1,4 +1,4 @@
-#!/Users/gugaavena/coding/Bandeco/CardapioParser/venv/bin/python
+#!/Users/gugaavena/coding/Bandeco/CardapioParser/clear/bin/python
 
 import sys
 import getopt
