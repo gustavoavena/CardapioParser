@@ -24,13 +24,14 @@ URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 # TODO: use enumeration to improve code organization.
 # TODO: change the menu strings to lowercase.
 # TODO: error handling in case the menu doesn' follow the pattern, or there is no menu for that day (weekends).
+# TODO: listar strings que nao podem ir pra lowecase (e.g. PTS, RU, RA)
 
 def main():
     cardapio = cardapio_por_data("2017-05-22")
 
     # pprint.pprint(cardapio)
     string = json.dumps(cardapio, indent=4, ensure_ascii=False)
-    print(string)
+    pprint.pprint(string)
 
 # recebe data no formato "AAAA-MM-DD" e retorna um dicionario com o cardapio daquele dia, caso tenha um.
 def cardapio_por_data(data):
@@ -55,9 +56,9 @@ def pega_salada_sobremesa_suco(items):
     cardapio = {}
 
     for i, alim in enumerate(alimentos):
-        tag = alimentos[i].upper() + ":"
-        valor = [s.replace(tag, "") for s in items if tag in s][0]
-        cardapio[alimentos[i]] = valor.capitalize()
+        tag = alimentos[i].upper() + ":" # tag para procurar o cardapio dos alimentos acima dentro do vetor items
+        valor = [s.replace(tag, "") for s in items if tag in s][0] # pega o valor do alimento e ja tira a tag (e.g. "SOBREMESA:")
+        cardapio[alimentos[i]] = valor.capitalize() # lowercase eh melhor para exibir.
         items = [s for s in items if tag not in s]
 
 
@@ -68,6 +69,8 @@ def preenche_refeicao(cardapio_do_dia, refeicao, soup):
     cardapio = {}
 
     items = [s for s in soup.get_text().split("\n") if s]
+
+    print(items)
 
     cardapio, items = pega_salada_sobremesa_suco(items)
 
