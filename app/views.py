@@ -19,16 +19,21 @@ def cardapio(date):
 
 # TODO: implementar metodo aqui que busca os cardapios dos proximos next dias uteis.
 #
+
+# recebe um array de datas (em strings) e retorna um json onde as chaves sao as datas e os valores
+# os cardapios completos para aquela data.
 @app.route('/dates', methods=['POST'])
-def cardapios():
+def cardapios_datas():
     if(request.method == 'POST'):
-        print("request.data = ", request.data)
         data_dict = json.loads(request.data)
         print(data_dict.get('datas'))
+        array_cardapios = cardapio_para_datas(data_dict.get('datas'))
+        pprint.pprint(array_cardapios)
+
+        json_response = json.dumps(array_cardapios)
+        return json_response
 
 
-    # print(json.dumps(cardapio, ensure_ascii=True))
-    # return json.dumps(cardapio, ensure_ascii=True)
     return "Empty"
 
 

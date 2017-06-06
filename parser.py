@@ -34,6 +34,8 @@ def main():
     # pprint.pprint(string)
 
 # recebe data no formato "AAAA-MM-DD" e retorna um dicionario com o cardapio daquele dia, caso tenha um.
+
+
 def cardapio_por_data(data):
     res = requests.get(URL_TEMPLATE+data)
 
@@ -68,10 +70,9 @@ def pega_salada_sobremesa_suco(items):
 def preenche_refeicao(cardapio_do_dia, refeicao, soup):
     cardapio = {}
 
-    print(soup)
     items = [s for s in soup.get_text().split("\n") if s]
 
-    print(items)
+    # print(items)
 
     cardapio, items = pega_salada_sobremesa_suco(items)
 
@@ -88,6 +89,19 @@ def preenche_refeicao(cardapio_do_dia, refeicao, soup):
 
 
     return cardapio_do_dia
+
+
+# retorna um dict com o cardapio completo do dia para cada data.
+def cardapio_para_datas(datas):
+    cardapios= {}
+
+    for data in datas:
+        c = cardapio_por_data(data)
+        cardapios[data] = c
+
+    return cardapios
+
+
 
 
 if __name__ == '__main__':
