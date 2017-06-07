@@ -2,12 +2,6 @@ from enum import Enum
 
 import json
 
-class EnumEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if type(obj) in TipoRefeicao.values():
-            return {"__enum__": str(obj)}
-        return json.JSONEncoder.default(self, obj)
-
 class TipoRefeicao(Enum):
     ALMOCO = "Almoço"
     ALMOCO_VEGETARIANO = "Almoço Vegetariano"
@@ -40,7 +34,7 @@ def _default(self, obj):
 _default.default = JSONEncoder().default  # Save unmodified default.
 JSONEncoder.default = _default # replacement
 
-class Refeicao(json.JSONEncoder):
+class Refeicao:
 
     def __init__(self, tipo, arroz_feijao, prato_principal, guarnicao, pts, salada, sobremesa, suco, observacoes):
         self.tipo = tipo # TODO: garatir que eh do tipo Refeicao
