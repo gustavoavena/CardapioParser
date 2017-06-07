@@ -1,6 +1,8 @@
 from app import app
 from parser import *
 from flask import request
+import collections
+
 
 @app.route('/')
 @app.route('/index')
@@ -11,19 +13,22 @@ def index():
 def cardapio(date):
 
     cardapio = cardapio_por_data(date)
-    pprint.pprint(cardapio)
+    print(cardapio)
     # print(json.dumps(cardapio, ensure_ascii=True))
-    return json.dumps(cardapio, ensure_ascii=True)
+    return json.dumps(cardapio.__dict__, ensure_ascii=True)
 
 
 
-# TODO: implementar metodo aqui que busca os cardapios dos proximos next dias uteis.
+# TODO: implementar metodo aqui que busca os cardapios dos proximos next dias uteis!!!!
 #
 
+# TODO: talvez seja melhor retornar um array de tuplas, onde o primeiro elemento é a data e o sgundo eh um dict
+# com o cardapio daquela data...
 # recebe um array de datas (em strings) e retorna um json onde as chaves sao as datas e os valores
 # os cardapios completos para aquela data.
 @app.route('/dates', methods=['POST'])
 def cardapios_datas():
+
     if(request.method == 'POST'):
         data_dict = json.loads(request.data)
         print(data_dict.get('datas'))
@@ -35,6 +40,7 @@ def cardapios_datas():
 
 
     return "Empty"
+
 
 
 

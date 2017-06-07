@@ -1,22 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import pprint
-from enum import Enum
 import json
-
-class Refeicao(Enum):
-    ALMOCO = "Almoço"
-    ALMOCO_VEGETARIANO = "Almoço Vegetariano"
-    JANTAR = "Jantar"
-    JANTAR_VEGETARIANO = "Jantar Vegetariano"
-
-class ItemCardapio(Enum):
-    ARROZ_FEIJAO = "arroz_feijao"
-    PRATO_PRINCIPAL = "prato_principal"
-    SALADA = "salada"
-    SOBREMESA = "sobremesa"
-    SUCO = "suco"
-    OBSERVACOES = "observacoes"
+from BandecoClasses import *
 
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
@@ -45,11 +31,18 @@ def cardapio_por_data(data):
 
     meals = soup.find_all(class_="fundo_cardapio")
 
-    cardapio = {}
-    refeicoes = ["Almoço", "Almoço Vegetariano", "Jantar", "Jantar Vegetariano"]
+    refeicoes = list(TipoRefeicao)
+    # print(refeicoes)
+
+    refs = {}
 
     for i, m in enumerate(meals[1:]):
-        preenche_refeicao(cardapio, refeicoes[i], m)
+        refs[refeicoes[i]] = get_refeicao(refeicoes[i], m)
+
+    print("refs = ", refs)
+
+    cardapio = Cardapio.fromRefeicoesDict(data=data, refeicoes=refs)
+    print("cardapio = ", cardapio)
 
     return cardapio
 
@@ -91,13 +84,35 @@ def preenche_refeicao(cardapio_do_dia, refeicao, soup):
     return cardapio_do_dia
 
 
+def get_refeicao(tipo, soup):
+    cardapio = {}
+
+    items = [s for s in soup.get_text().split("\n") if s]
+
+    # print(items)
+
+    cardapio, items = pega_salada_sobremesa_suco(items)
+
+    # pega tipo de arroz:
+    cardapio["arroz_feijao"] = items.pop(0).capitalize()
+
+    # observacoes
+    cardapio["observacoes"] = items.pop().replace("Observações:  ", "").title()
+
+    # prato principal
+    cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize(),
+                                   *[i.capitalize() for i in items]]  # o que sobrar faz parte do prato principal
+
+    return Refeicao(tipo=tipo, **cardapio, guarnicao=None, pts=None)
+
+
 # retorna um dict com o cardapio completo do dia para cada data.
 def cardapio_para_datas(datas):
-    cardapios= {}
+    cardapios = []
 
     for data in datas:
         c = cardapio_por_data(data)
-        cardapios[data] = c
+        cardapios.append((data, c))
 
     return cardapios
 
