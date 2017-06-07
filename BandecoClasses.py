@@ -2,11 +2,11 @@ from enum import Enum
 
 import json
 
-def MyEnum(Enum):
-    def __repr__(self):
-        return json.dumps(self.__dict__)
-
-Enum.__repr__ = MyEnum.__repr__
+class EnumEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if type(obj) in TipoRefeicao.values():
+            return {"__enum__": str(obj)}
+        return json.JSONEncoder.default(self, obj)
 
 class TipoRefeicao(Enum):
     ALMOCO = "Almoço"
@@ -61,7 +61,7 @@ class Refeicao(json.JSONEncoder):
             print("problema com convienience init de Refeicao.")
 
     def __str__(self):
-        out = "Tipo: " + self.tipo.value
+        out = "Tipo: " + self.tipo
         out += "{}\nsobremesa: {}\nsuco: {}\n".format(self.prato_principal, self.sobremesa, self.suco)
         return out
 

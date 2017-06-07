@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="249c7bee-913b-4ff5-abd1-70c47a2e2fc3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/BandecoClasses.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BandecoClasses.py" afterPath="$PROJECT_DIR$/BandecoClasses.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser.py" afterPath="$PROJECT_DIR$/parser.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -65,24 +62,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parser.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+            <state relative-caret-position="1134">
+              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#1870#2470#0" expanded="false" />
+                <element signature="e#1376#1860#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BandecoClasses.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BandecoClasses.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BandecoClasses.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="8" column="31" lean-forward="false" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
+            <state relative-caret-position="599">
+              <caret line="63" column="34" lean-forward="false" selection-start-line="63" selection-start-column="34" selection-end-line="63" selection-end-column="34" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -120,9 +117,9 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/unicamp_server.py" />
         <option value="$PROJECT_DIR$/Refeicao.py" />
-        <option value="$PROJECT_DIR$/parser.py" />
         <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/BandecoClasses.py" />
+        <option value="$PROJECT_DIR$/parser.py" />
       </list>
     </option>
   </component>
@@ -410,7 +407,7 @@
           <caret line="51" column="52" lean-forward="true" selection-start-line="51" selection-start-column="52" selection-end-line="51" selection-end-column="52" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -463,7 +460,7 @@
           <caret line="96" column="40" lean-forward="false" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -500,7 +497,7 @@
           <caret line="64" column="26" lean-forward="false" selection-start-line="64" selection-start-column="26" selection-end-line="64" selection-end-column="26" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -547,7 +544,7 @@
           <caret line="58" column="88" lean-forward="true" selection-start-line="58" selection-start-column="88" selection-end-line="58" selection-end-column="88" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -584,7 +581,7 @@
           <caret line="33" column="25" lean-forward="true" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -621,7 +618,7 @@
           <caret line="15" column="21" lean-forward="true" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -658,7 +655,7 @@
           <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -687,7 +684,7 @@
           <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -724,7 +721,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -763,7 +760,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -774,7 +771,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -823,23 +820,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parser.py">
+    <entry file="file://$PROJECT_DIR$/BandecoClasses.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+        <state relative-caret-position="599">
+          <caret line="63" column="34" lean-forward="false" selection-start-line="63" selection-start-column="34" selection-end-line="63" selection-end-column="34" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#1870#2470#0" expanded="false" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BandecoClasses.py">
+    <entry file="file://$PROJECT_DIR$/parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="31" lean-forward="false" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
+        <state relative-caret-position="1134">
+          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#1376#1860#0" expanded="false" />
           </folding>
         </state>
       </provider>

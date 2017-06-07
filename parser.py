@@ -26,22 +26,20 @@ def cardapio_por_data(data):
     res = requests.get(URL_TEMPLATE+data)
 
     html_doc = res.content
-
     soup = BeautifulSoup(html_doc, 'html.parser')
-
     meals = soup.find_all(class_="fundo_cardapio")
 
-    refeicoes = list(TipoRefeicao)
-    # print(refeicoes)
+    tipos_refeicoes = list(TipoRefeicao)
+    # print(refeicoes[0].value)
 
-    refs = {}
+    refeicoes = {}
 
     for i, m in enumerate(meals[1:]):
-        refs[refeicoes[i]] = get_refeicao(refeicoes[i], m)
+        refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
 
-    print("refs = ", refs)
+    # print("refs = ", refeicoes)
 
-    cardapio = Cardapio.fromRefeicoesDict(data=data, refeicoes=refs)
+    cardapio = Cardapio.fromRefeicoesDict(data=data, refeicoes=refeicoes)
     print("cardapio = ", cardapio)
 
     return cardapio
@@ -60,29 +58,6 @@ def pega_salada_sobremesa_suco(items):
     return cardapio, items
 
 
-def preenche_refeicao(cardapio_do_dia, refeicao, soup):
-    cardapio = {}
-
-    items = [s for s in soup.get_text().split("\n") if s]
-
-    # print(items)
-
-    cardapio, items = pega_salada_sobremesa_suco(items)
-
-    # pega tipo de arroz:
-    cardapio["arroz_feijao"] = items.pop(0).capitalize()
-
-    # observacoes
-    cardapio["observacoes"] = items.pop().replace("Observações:  ", "").title()
-
-    # prato principal
-    cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize(), *[i.capitalize() for i in items]] # o que sobrar faz parte do prato principal
-
-    cardapio_do_dia[refeicao] = cardapio
-
-
-    return cardapio_do_dia
-
 
 def get_refeicao(tipo, soup):
     cardapio = {}
@@ -93,13 +68,10 @@ def get_refeicao(tipo, soup):
 
     cardapio, items = pega_salada_sobremesa_suco(items)
 
-    # pega tipo de arroz:
     cardapio["arroz_feijao"] = items.pop(0).capitalize()
 
-    # observacoes
     cardapio["observacoes"] = items.pop().replace("Observações:  ", "").title()
 
-    # prato principal
     cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize(),
                                    *[i.capitalize() for i in items]]  # o que sobrar faz parte do prato principal
 
