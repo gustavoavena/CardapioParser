@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import pprint
-import json
 from BandecoClasses import *
 import date_services
 
@@ -20,30 +19,7 @@ def main():
     string = json.dumps(cardapio, indent=4, ensure_ascii=False)
     # pprint.pprint(string)
 
-# recebe data no formato "AAAA-MM-DD" e retorna um dicionario com o cardapio daquele dia, caso tenha um.
 
-
-def cardapio_por_data(data_string):
-    res = requests.get(URL_TEMPLATE+data_string)
-
-    html_doc = res.content
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    meals = soup.find_all(class_="fundo_cardapio")
-
-    tipos_refeicoes = list(TipoRefeicao)
-    # print(refeicoes[0].value)
-
-    refeicoes = {}
-
-    for i, m in enumerate(meals[1:]):
-        refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
-
-    # print("refs = ", refeicoes)
-
-    cardapio = Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes)
-    print("cardapio = ", cardapio)
-
-    return cardapio
 
 def pega_salada_sobremesa_suco(items):
     alimentos = ["salada", "suco", "sobremesa"]
@@ -77,6 +53,31 @@ def get_refeicao(tipo, soup):
                                    *[i.capitalize() for i in items]]  # o que sobrar faz parte do prato principal
 
     return Refeicao(tipo=tipo, **cardapio, guarnicao=None, pts=None)
+
+def cardapio_por_data(data_string):
+    res = requests.get(URL_TEMPLATE+data_string)
+
+    html_doc = res.content
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    meals = soup.find_all(class_="fundo_cardapio")
+
+    tipos_refeicoes = list(TipoRefeicao)
+    # print(refeicoes[0].value)
+
+    refeicoes = {}
+
+    for i, m in enumerate(meals[1:]):
+        refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
+
+    # print("refs = ", refeicoes)
+
+    cardapio = Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes)
+    print("cardapio = ", cardapio)
+
+    return cardapio
+
+
+
 
 
 # retorna um dict com o cardapio completo do dia para cada data.
