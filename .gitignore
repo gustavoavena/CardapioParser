@@ -61,3 +61,6 @@ target/
 
 .ide
 .idea
+.idea*
+.idea
+.idea/*
