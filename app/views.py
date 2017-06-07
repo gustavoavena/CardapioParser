@@ -42,6 +42,13 @@ def cardapios_datas():
     return "Empty"
 
 
+@app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
+def next_cardapios(date_string, next):
+    cardapios = get_next_cardapios(date_string, next)
+
+    json_response = json.dumps(cardapios)
+    return json_response
+
 
 
 
@@ -49,3 +56,20 @@ def cardapios_datas():
 
 
 # curl -H "Content-Type: application/json" -X POST -d '{"datas":["2017-06-06","2017-06-07","2017-06-08","2017-06-09","2017-06-12","2017-06-13","2017-06-14"]}' http://127.0.0.1:5000/dates
+
+
+
+"""
+Quais metodos eu preciso:
+
+
+- cardapio_por_data(data_string: string) -> Cardapio
+    - OBS: Ele precisa de outros metodos, mas quando mudarmos o API, mudaremos a interface. O que importa
+    eh que as rotas tenham acesso a ESSES metodos, com esses parametros e esses retornos.
+    
+- next_cardapios(date_string: string, next: int) -> [Cardapio]
+    - next_weekdays(next: int, start_date: datetime.date = date.today()) -> [String]
+    - cardapio_para_datas(data_strings: [string]) -> [Cardapio]
+
+
+"""

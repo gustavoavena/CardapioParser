@@ -3,6 +3,7 @@ import requests
 import pprint
 import json
 from BandecoClasses import *
+import date_services
 
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
@@ -22,8 +23,8 @@ def main():
 # recebe data no formato "AAAA-MM-DD" e retorna um dicionario com o cardapio daquele dia, caso tenha um.
 
 
-def cardapio_por_data(data):
-    res = requests.get(URL_TEMPLATE+data)
+def cardapio_por_data(data_string):
+    res = requests.get(URL_TEMPLATE+data_string)
 
     html_doc = res.content
     soup = BeautifulSoup(html_doc, 'html.parser')
@@ -39,7 +40,7 @@ def cardapio_por_data(data):
 
     # print("refs = ", refeicoes)
 
-    cardapio = Cardapio.fromRefeicoesDict(data=data, refeicoes=refeicoes)
+    cardapio = Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes)
     print("cardapio = ", cardapio)
 
     return cardapio
@@ -79,15 +80,19 @@ def get_refeicao(tipo, soup):
 
 
 # retorna um dict com o cardapio completo do dia para cada data.
-def cardapio_para_datas(datas):
+def cardapio_para_datas(data_strings):
     cardapios = []
 
-    for data in datas:
+    for data in data_strings:
         c = cardapio_por_data(data)
         cardapios.append((data, c))
 
     return cardapios
 
+
+def get_next_cardapios(date_string, next):
+    date_strings = date_services.next_weekdays(next, start_date=date_string)
+    return cardapio_para_datas(date_strings)
 
 
 
