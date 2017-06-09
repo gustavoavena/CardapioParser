@@ -11,13 +11,6 @@ class TipoRefeicao(Enum):
     def to_json(self):
         return json.dumps(self.__dict__)
 
-class ItemCardapio(Enum):
-    ARROZ_FEIJAO = "arroz_feijao"
-    PRATO_PRINCIPAL = "prato_principal"
-    SALADA = "salada"
-    SOBREMESA = "sobremesa"
-    SUCO = "suco"
-    OBSERVACOES = "observacoes"
 
 
 class MyJsonEncoder(json.JSONEncoder):

@@ -41,7 +41,7 @@ def get_refeicao(tipo, soup):
 
     items = [s for s in soup.get_text().split("\n") if s]
 
-    # print(items)
+    print(items)
 
     cardapio, items = pega_salada_sobremesa_suco(items)
 
@@ -49,10 +49,11 @@ def get_refeicao(tipo, soup):
 
     cardapio["observacoes"] = items.pop().replace("Observações:  ", "").title()
 
-    cardapio["prato_principal"] = [items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize(),
-                                   *[i.capitalize() for i in items]]  # o que sobrar faz parte do prato principal
+    cardapio["prato_principal"] = items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize()
+    cardapio["guarnicao"] = items[0].capitalize()
+    cardapio["pts"] = items[1].capitalize()
 
-    return Refeicao(tipo=tipo, **cardapio, guarnicao=None, pts=None)
+    return Refeicao(tipo=tipo, **cardapio)
 
 def cardapio_por_data(data_string):
     res = requests.get(URL_TEMPLATE+data_string)
