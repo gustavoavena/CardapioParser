@@ -20,19 +20,10 @@ class ItemCardapio(Enum):
     OBSERVACOES = "observacoes"
 
 
+class MyJsonEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
 
-""" Module that monkey-patches json module when it's imported so
-JSONEncoder.default() automatically checks for a special "to_json()"
-method and uses it to encode the object if found.
-"""
-from json import JSONEncoder
-
-def _default(self, obj):
-    return getattr(obj.__class__, "to_json", _default.default)(obj)
-
-
-_default.default = JSONEncoder().default  # Save unmodified default.
-JSONEncoder.default = _default # replacement
 
 class Refeicao:
 
@@ -59,6 +50,7 @@ class Refeicao:
         out += "{}\nsobremesa: {}\nsuco: {}\n".format(self.prato_principal, self.sobremesa, self.suco)
         return out
 
+    @staticmethod
     def to_json(self):
         return json.dumps(self.__dict__)
 
@@ -92,5 +84,6 @@ class Cardapio:
     def __str__(self):
         return "Cardapio\nData: {}\nAlmoco: \n  {}\nJantar: \n  {}\n".format(self.data, self.almoco, self.jantar)
 
+    @staticmethod
     def to_json(self):
         return json.dumps(self.__dict__)

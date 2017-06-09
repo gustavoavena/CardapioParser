@@ -2,6 +2,9 @@ from app import app
 from parser import *
 
 
+
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -12,7 +15,7 @@ def index():
 @app.route('/cardapios/date/<string:date_string>', methods=['GET'])
 def get_cardapios_date(date_string):
     cardapio = cardapio_por_data(date_string)
-    json_response = json.dumps(cardapio)
+    json_response = json.dumps(cardapio, cls=MyJsonEncoder)
     return json_response
 
 
@@ -20,7 +23,7 @@ def get_cardapios_date(date_string):
 def get_cardapios_date_next(date_string, next):
     cardapios = get_next_cardapios(date_string, next)
 
-    json_response = json.dumps(cardapios)
+    json_response = json.dumps(cardapios, cls=MyJsonEncoder)
     return json_response
 
 

@@ -86,7 +86,7 @@ def cardapio_para_datas(data_strings):
 
     for data in data_strings:
         c = cardapio_por_data(data)
-        cardapios.append((data, c))
+        cardapios.append(c)
 
     return cardapios
 
