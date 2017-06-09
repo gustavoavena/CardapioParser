@@ -59,4 +59,9 @@ target/
 .DS_Store
 *.db
 
+
+.ide
 .idea
+.idea*
+.idea
+.idea/*
