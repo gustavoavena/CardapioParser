@@ -18,11 +18,11 @@ def get_cardapios_date(date_string):
     json_response = json.dumps(cardapio, cls=MyJsonEncoder)
     return json_response
 
-
-@app.route('/cardapios/date/2017-06-09/next/3', methods=['GET'])
-def offline_json():
-    f = open("json_offline2.txt")
-    return f.read()
+#
+# @app.route('/cardapios/date/2017-06-09/next/3', methods=['GET'])
+# def offline_json():
+#     f = open("json_offline2.txt")
+#     return f.read()
 
 
 @app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
