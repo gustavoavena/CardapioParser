@@ -19,12 +19,20 @@ def get_cardapios_date(date_string):
     return json_response
 
 
+@app.route('/cardapios/date/2017-06-09/next/3', methods=['GET'])
+def offline_json():
+    f = open("json_offline2.txt")
+    return f.read()
+
+
 @app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
 def get_cardapios_date_next(date_string, next):
     cardapios = get_next_cardapios(date_string, next)
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
     return json_response
+
+
 
 
 """
