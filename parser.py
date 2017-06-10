@@ -53,6 +53,11 @@ def get_refeicao(tipo, soup):
     else:
         cardapio["observacoes"] = obs.replace("Observações:  ", "Obs: ").capitalize()
 
+    ACRONIMOS = ["pts", " ru ", " ra ", " rs "]
+
+    for sig in ACRONIMOS:
+        cardapio["observacoes"].replace(sig, sig.upper())
+        
 
     # o primeiro item nesse momento eh sempre o prato principal.
     cardapio["prato_principal"] = items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize()
@@ -61,7 +66,7 @@ def get_refeicao(tipo, soup):
     # o que sobra eh a guarnicao e o pts.
     cardapio["guarnicao"] = items[0].capitalize()
     if len(items) == 2:
-        cardapio["pts"] = items[1].capitalize()
+        cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
     else:
         cardapio["pts"] = "-"
 
