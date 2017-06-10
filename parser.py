@@ -57,9 +57,13 @@ def get_refeicao(tipo, soup):
     # o primeiro item nesse momento eh sempre o prato principal.
     cardapio["prato_principal"] = items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize()
 
+    print("items que sobram ", items)
     # o que sobra eh a guarnicao e o pts.
     cardapio["guarnicao"] = items[0].capitalize()
-    cardapio["pts"] = items[1].capitalize()
+    if len(items) == 2:
+        cardapio["pts"] = items[1].capitalize()
+    else:
+        cardapio["pts"] = "-"
 
 
     return Refeicao(tipo=tipo, **cardapio) # retorna objeto da classe Refeicao utilizando dando "unwrap" no dictionario.
