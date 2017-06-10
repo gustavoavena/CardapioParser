@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
-import pprint
 from BandecoClasses import *
 import date_services
+
+from app import cache
 
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
@@ -15,9 +16,7 @@ URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 def main():
     cardapio = cardapio_por_data("2017-05-22")
 
-    # pprint.pprint(cardapio)
     string = json.dumps(cardapio, indent=4, ensure_ascii=False)
-    # pprint.pprint(string)
 
 
 
@@ -41,7 +40,7 @@ def get_refeicao(tipo, soup):
 
     items = [s for s in soup.get_text().split("\n") if s] # retira todas as tags de HTML, e armazena todos os elementos (strings nao vazias) em uma lista.
 
-    print(items) # pelo padrao da pagina HTML, os elementos estao sempre na mesma ordem.
+    # print(items) # pelo padrao da pagina HTML, os elementos estao sempre na mesma ordem.
 
     cardapio, items = pega_salada_sobremesa_suco(items)
 
@@ -57,14 +56,14 @@ def get_refeicao(tipo, soup):
 
     for sig in ACRONIMOS:
         cardapio["observacoes"].replace(sig, sig.upper())
-        
+
 
     # o primeiro item nesse momento eh sempre o prato principal.
     cardapio["prato_principal"] = items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize()
 
-    print("items que sobram ", items)
     # o que sobra eh a guarnicao e o pts.
-    cardapio["guarnicao"] = items[0].capitalize()
+    cardapio["guarnicao"] = items[0].capitalize().replace("pts", "PTS")
+
     if len(items) == 2:
         cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
     else:
@@ -89,10 +88,8 @@ def cardapio_por_data(data_string):
     for i, m in enumerate(meals[1:]):
         refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
 
-    # print("refs = ", refeicoes)
 
     cardapio = Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes)
-    print("cardapio = ", cardapio)
 
     return cardapio
 
@@ -111,8 +108,11 @@ def cardapio_para_datas(data_strings):
     return cardapios
 
 
+@cache.memoize(timeout=60 * 5) # cache com timeout de 5min
 def get_next_cardapios(date_string, next):
+    
     date_strings = date_services.next_weekdays(next, start_date=date_string)
+    print("EXECUTOU get_next_cardapio")
     return cardapio_para_datas(date_strings)
 
 
@@ -129,16 +129,14 @@ def cardapio_por_data_offline():
     meals = soup.find_all(class_="fundo_cardapio")
 
     tipos_refeicoes = list(TipoRefeicao)
-    # print(refeicoes[0].value)
 
     refeicoes = {}
 
     for i, m in enumerate(meals[1:]):
         refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
 
-    # print("refs = ", refeicoes)
 
-    cardapio = Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes)
+    cardapio = Cardapio.fromRefeicoesDict(data='2017-06-09', refeicoes=refeicoes)
     print("cardapio = ", cardapio)
 
     return cardapio

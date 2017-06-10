@@ -3,6 +3,7 @@ beautifulsoup4==4.6.0
 bs4==0.0.1
 click==6.7
 Flask==0.12.2
+Flask-Cache==0.13.1
 gunicorn==19.7.1
 itsdangerous==0.24
 Jinja2==2.9.6
