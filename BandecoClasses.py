@@ -20,7 +20,7 @@ class MyJsonEncoder(json.JSONEncoder):
 
 class Refeicao:
 
-    def __init__(self, tipo, arroz_feijao, prato_principal, guarnicao, pts, salada, sobremesa, suco, observacoes):
+    def __init__(self, tipo, arroz_feijao, prato_principal, guarnicao, pts, salada, sobremesa, suco, observacoes, **kwargs):
         self.tipo = tipo # TODO: garatir que eh do tipo Refeicao
         self.arroz_feijao = arroz_feijao
         self.prato_principal = prato_principal
@@ -49,10 +49,25 @@ class Refeicao:
 
 
 
+'''
+{'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-12',
+               'GUARNICAO': 'BATATA FRITA LISA',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NO STROGONOFF DE '
+                      'CARNE E CONTÉM LACTOSE NO STROGONOFF DE CARNE. NÃO '
+                      'CONTÉM OVOS.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'STROGONOFF DE CARNE',
+               'PTS': 'PTS COM MANDIOQUINHA',
+               'SALADA': 'ALFACE',
+               'SOBREMESA': 'MAÇÃ',
+               'SUCO': 'CAJÚ',
+               'TIPO': 'Almoço'}
+'''
 
 class Cardapio:
 
-    def __init__(self, data, almoco, jantar, almoco_vegetariano, jantar_vegetariano):
+    def __init__(self, data, almoco, jantar, almoco_vegetariano, jantar_vegetariano, **kwargs):
         self.data = data
 
         # garante que as refeicoes sao do tipo certo.

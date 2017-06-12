@@ -1,6 +1,6 @@
 from app import app
 from parser import *
-
+import unicamp_webservices
 
 
 
@@ -11,6 +11,15 @@ def index():
     return "Esse app ira fazer o parsing do cardapio da unicamp e retornar um JSON."
 
 
+@app.route('/cardapios', methods=['GET'])
+def get_all_cardapios():
+    cardapios = unicamp_webservices.get_all_cardapios()
+
+    print(cardapios)
+
+    json_response = json.dumps(cardapios, cls=MyJsonEncoder)
+
+    return json_response
 
 @app.route('/cardapios/date/<string:date_string>', methods=['GET'])
 def get_cardapios_date(date_string):

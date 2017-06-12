@@ -1,0 +1,200 @@
+{'CARDAPIO': [{'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-12',
+               'GUARNICAO': 'BATATA FRITA LISA',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NO STROGONOFF DE '
+                      'CARNE E CONTÉM LACTOSE NO STROGONOFF DE CARNE. NÃO '
+                      'CONTÉM OVOS.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'STROGONOFF DE CARNE',
+               'PTS': 'PTS COM MANDIOQUINHA',
+               'SALADA': 'ALFACE',
+               'SOBREMESA': 'MAÇÃ',
+               'SUCO': 'CAJÚ',
+               'TIPO': 'Almoço'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-12',
+               'GUARNICAO': 'BATATA PALHA',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NO STROGONOFF VEGANO. '
+                      'NÃO CONTÉM OVOS E LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'STROGONOFF VEGANO',
+               'PTS': '-',
+               'SALADA': 'ALFACE',
+               'SOBREMESA': 'MAÇÃ',
+               'SUCO': 'CAJÚ',
+               'TIPO': 'Almoço Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-12',
+               'GUARNICAO': 'não informado',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E CONTÉM TRAÇOS DE '
+                      'LACTOSE NO BIFE PAULISTA. NÃO CONTÉM OVOS .\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'BIFE PAULISTA',
+               'PTS': 'PTS COM VAGEM',
+               'SALADA': 'CENOURA RALADA',
+               'SOBREMESA': 'BANANA',
+               'SUCO': 'CAJÚ',
+               'TIPO': 'Jantar'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-12',
+               'GUARNICAO': '-',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NA TORTA DE SOJA E '
+                      'AVEIA. NÃO CONTÉM OVOS E LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'TORTA DE SOJA E AVEIA AO MOLHO DE '
+                                  'MANDIOQUINHA',
+               'PTS': '-',
+               'SALADA': 'CENOURA RALADA',
+               'SOBREMESA': 'BANANA',
+               'SUCO': 'CAJÚ',
+               'TIPO': 'Jantar Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-13',
+               'GUARNICAO': 'MACARRÃO AO SUGO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO, MACARRÃO AO SUGO E NA '
+                      'BARRA DE CEREAL. CONTÉM LACTOSE E DERIVADOS DE SOJA NA '
+                      'BARRA DE CEREAL.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'CARNE MOÍDA COM VAGEM',
+               'PTS': 'PTS COM VAGEM',
+               'SALADA': 'MISTA DE GRÃO DE BICO',
+               'SOBREMESA': 'BARRA DE CEREAL COM CHOCOLATE',
+               'SUCO': 'TANGERINA',
+               'TIPO': 'Almoço'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-13',
+               'GUARNICAO': 'não informado',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NO MACARRÃO INTEGRAL '
+                      'AO SUGO E NÃO CONTÉM LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'MACARRÃO INTEGRAL AO SUGO',
+               'PTS': 'não informado',
+               'SALADA': 'MISTA DE GRÃO DE BICO',
+               'SOBREMESA': 'FRUTA',
+               'SUCO': 'TANGERINA',
+               'TIPO': 'Almoço Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-13',
+               'GUARNICAO': 'não informado',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO. NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'ISCA DE CARNE COM LEGUMES',
+               'PTS': 'PTS COM CENOURA E BATATA',
+               'SALADA': 'REPOLHO COM RABANETE',
+               'SOBREMESA': 'GELATINA DE ABACAXI',
+               'SUCO': 'TANGERINA',
+               'TIPO': 'Jantar'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-13',
+               'GUARNICAO': 'não informado',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NO STROGONOFF VEGANO. '
+                      'NÃO CONTÉM OVOS E LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'STROGONOFF VEGANO',
+               'PTS': 'não informado',
+               'SALADA': 'REPOLHO COM RABANETE',
+               'SOBREMESA': 'FRUTA',
+               'SUCO': 'TANGERINA',
+               'TIPO': 'Jantar Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-14',
+               'GUARNICAO': 'JARDINEIRA DE LEGUMES (BATATA, CENOURA E VAGEM)',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NÃO CONTÉM  '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'OVO MEXIDO COM SALSICHA',
+               'PTS': 'PTS COM BETERRABA',
+               'SALADA': 'PEPINO',
+               'SOBREMESA': 'TANGERINA MURCOTE',
+               'SUCO': 'UVA',
+               'TIPO': 'Almoço'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-14',
+               'GUARNICAO': 'JARDINEIRA DE LEGUMES (BATATA, CENOURA E VAGEM)',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO. NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'SOJA XADREZ',
+               'PTS': 'não informado',
+               'SALADA': 'PEPINO',
+               'SOBREMESA': 'TANGERINA MURCOTE',
+               'SUCO': 'UVA',
+               'TIPO': 'Almoço Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-14',
+               'GUARNICAO': 'ARROZ CARRETEIRO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'CARNE ASSADA AO MOLHO DE ABACAXI',
+               'PTS': 'PTS COM CARÁ',
+               'SALADA': 'SOJA COM TOMATE',
+               'SOBREMESA': 'MAÇÃ',
+               'SUCO': 'UVA',
+               'TIPO': 'Jantar'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-14',
+               'GUARNICAO': 'não informado',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'CUSCUZ VEGETARIANO',
+               'PTS': 'não informado',
+               'SALADA': 'SOJA COM TOMATE',
+               'SOBREMESA': 'MAÇÃ',
+               'SUCO': 'UVA',
+               'TIPO': 'Jantar Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-19',
+               'GUARNICAO': 'CREME DE MILHO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO, ALMÔNDEGA E NO CREME '
+                      'DE MILHO. CONTÉM LACTOSE NO CREME DE MILHO E NO '
+                      'IOGURTE.  NÃO CONTÉM OVOS.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'ALMÔNDEGA ACEBOLADA',
+               'PTS': 'PTS COM ABÓBORA',
+               'SALADA': 'ACELGA',
+               'SOBREMESA': 'IOGURTE',
+               'SUCO': 'ABACAXI',
+               'TIPO': 'Almoço'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-19',
+               'GUARNICAO': 'CREME DE MILHO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO, NO QUIBE DE BERINJELA '
+                      'COM CENOURA E NO CREME DE MILHO. NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'QUIBE DE BERINJELA COM CENOURA',
+               'PTS': 'não informado',
+               'SALADA': 'ACELGA',
+               'SOBREMESA': 'FRUTA',
+               'SUCO': 'ABACAXI',
+               'TIPO': 'Almoço Vegetariano'},
+              {'ACOMPANHAMENTO': 'ARROZ E FEIJÃO',
+               'DATA': '2017-06-19',
+               'GUARNICAO': 'CHUCHU REFOGADO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NA BARRA DE '
+                      'CEREAL. \r\n'
+                      'CONTÉM LACTOSE E DERIVADOS DE SOJA NA BARRA DE '
+                      'CEREAL.\r\n'
+                      'NÃO CONTÉM OVOS.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'OVO MEXIDO COM LINGUIÇA',
+               'PTS': 'PTS COM BERINJEA',
+               'SALADA': 'ALFACE COM RÚCULA',
+               'SOBREMESA': 'BARRA DE CEREAL',
+               'SUCO': 'ABACAXI',
+               'TIPO': 'Jantar'},
+              {'ACOMPANHAMENTO': 'ARROZ INTEGRAL E FEIJÃO',
+               'DATA': '2017-06-19',
+               'GUARNICAO': 'CHUCHU REFOGADO',
+               'OBS': 'O CARDÁPIO CONTÉM GLÚTEN NO PÃO E NÃO CONTÉM OVOS E '
+                      'LACTOSE.\r\n'
+                      '<font color = "red"> NÃO ESQUEÇA SUA CANECA ! </font>',
+               'PRATO PRINCIPAL': 'SOJA COZIDA COM LEGUMES',
+               'PTS': 'não informado',
+               'SALADA': 'ALFACE COM RÚCULA',
+               'SOBREMESA': 'FRUTA',
+               'SUCO': 'ABACAXI',
+               'TIPO': 'Jantar Vegetariano'}]}
