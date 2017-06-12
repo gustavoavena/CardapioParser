@@ -15,10 +15,11 @@ def index():
 def get_all_cardapios():
     cardapios = unicamp_webservices.get_all_cardapios()
 
-    print(cardapios)
+    # print(cardapios)
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
 
+    # print(json_response)
     return json_response
 
 @app.route('/cardapios/date/<string:date_string>', methods=['GET'])

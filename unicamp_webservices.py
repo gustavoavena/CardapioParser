@@ -21,6 +21,8 @@ def limpa_chaves(refeicoes_list):
             ref['prato_principal'] = ref.pop('prato principal')
             ref['arroz_feijao'] = ref.pop('acompanhamento')
             ref['observacoes'] = ref.pop('obs')
+            ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
+            ref['observacoes'] = ref['observacoes'].replace('</font>', '')
             ref['pts'] = ref['pts'].replace("pts", "PTS") # TODO
             # TODO: consertar essa gambiarra depois.
 
@@ -52,7 +54,6 @@ def cria_refeicoes(refeicoes_list):
             print("provavelmente argumento a mais no construtor de Refeicao")
             print(e)
 
-    pprint.pprint(cardapios_por_data)
     return cardapios_por_data
 
 
@@ -107,11 +108,11 @@ def get_all_cardapios():
 
     cardapios_por_data = cria_refeicoes(refeicoes_list)
 
-    pprint.pprint(cardapios_por_data)
 
     cardapios = cria_cardapios(cardapios_por_data)
 
-    pprint.pprint(cardapios)
+    # pprint.pprint(cardapios)
+    return cardapios
 
 
 def main():
