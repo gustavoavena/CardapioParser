@@ -5,4 +5,6 @@ proxyDict = {
             }
 
 
-r = requests.get('http://bandex.herokuapp.com', proxies=proxyDict)
+r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
+
+print(r.content)
