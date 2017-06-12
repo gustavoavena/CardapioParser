@@ -109,6 +109,7 @@ def cria_cardapios(cardapios_por_data):
 
 
 
+@cache.cached(timeout=60 * 30, key_prefix='get_all_cardapios') # cache com timeout de 30min para limitar requests ao API da UNICAMP.
 def get_all_cardapios():
     refeicoes_list = request_cardapio()
 
@@ -119,7 +120,7 @@ def get_all_cardapios():
 
     cardapios = cria_cardapios(cardapios_por_data)
 
-    # pprint.pprint(cardapios)
+    print("request para UNICAMP esta completo.")
     return cardapios
 
 
