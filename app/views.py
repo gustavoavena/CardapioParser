@@ -15,6 +15,7 @@ def index():
 def get_all_cardapios():
     cardapios = unicamp_webservices.get_all_cardapios()
 
+    print("buscando todos os cardapios disponiveis...")
     # print(cardapios)
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
