@@ -61,7 +61,15 @@ def cria_refeicoes(refeicoes_list):
 
 def request_cardapio():
     # TODO: fazer request de verdade.
-    raw_json = JSON_RESPONSE
+
+    proxyDict = {
+        "http": os.environ.get('FIXIE_URL', ''),
+        "https": os.environ.get('FIXIE_URL', '')
+    }
+    r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
+
+
+    raw_json = r.content
 
     try:
         cardapios = json.loads(raw_json)
