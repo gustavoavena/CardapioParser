@@ -1,6 +1,7 @@
 from app import app
 from parser import *
 import unicamp_webservices
+from datetime import date
 
 
 
@@ -17,6 +18,9 @@ def get_all_cardapios():
 
     print("buscando todos os cardapios disponiveis...")
     # print(cardapios)
+    if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
+        date_string = date.today().strftime("%y-%m-%d")
+        return get_cardapios_date_next(date_string, 5)
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
 
