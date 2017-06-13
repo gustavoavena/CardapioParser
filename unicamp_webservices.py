@@ -34,6 +34,7 @@ def limpa_chaves(refeicoes_list):
             ref['prato_principal'] = ref.pop('prato principal')
             ref['arroz_feijao'] = ref.pop('acompanhamento')
             ref['observacoes'] = ref.pop('obs')
+            limpa_especificos(ref)
 
             # TODO: consertar essa gambiarra depois.
 
