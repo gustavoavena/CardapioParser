@@ -138,8 +138,8 @@ def request_cardapio():
 
 
 
-# cache com timeout de 30min para limitar requests ao API da UNICAMP.
-@cache.cached(timeout=(60*30), key_prefix='get_all_cardapios')
+# cache com timeout de 60min para limitar requests ao API da UNICAMP.
+@cache.cached(timeout=(60*60), key_prefix='get_all_cardapios')
 def get_all_cardapios():
     """
     Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
