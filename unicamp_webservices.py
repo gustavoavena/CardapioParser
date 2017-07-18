@@ -138,7 +138,7 @@ def request_cardapio():
         refeicoes_list = []
 
 
-    return refeicoes_list, None
+    return refeicoes_list
 
 
 
@@ -147,7 +147,7 @@ def request_cardapio():
 def get_all_cardapios():
     """
     Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
-    :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio e um status code para informar sucesso ou erro.
+    :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio.
     """
     refeicoes_list = request_cardapio() # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
 
@@ -159,11 +159,7 @@ def get_all_cardapios():
 
     cardapios = cria_cardapios(cardapios_por_data)
 
-
-
-
     print("request para UNICAMP esta completo.")
-    # print(cardapios)
     return cardapios
 
 
