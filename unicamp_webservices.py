@@ -91,6 +91,10 @@ def cria_refeicoes(refeicoes_list):
             print("KeyError nas datas.")
             print(e, end="\n\n")
             break
+        except TypeError as e:
+            print("TypeError nas datas.")
+            print(e, end="\n\n")
+            break
 
         try:
             cardapios_por_data[d].append(Refeicao(**ref))
@@ -134,7 +138,7 @@ def request_cardapio():
         refeicoes_list = []
 
 
-    return refeicoes_list
+    return refeicoes_list, None
 
 
 
@@ -143,9 +147,10 @@ def request_cardapio():
 def get_all_cardapios():
     """
     Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
-    :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio.
+    :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio e um status code para informar sucesso ou erro.
     """
     refeicoes_list = request_cardapio() # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
+
 
     limpa_chaves(refeicoes_list) # faz a limpeza das informacoes.
 
@@ -154,7 +159,11 @@ def get_all_cardapios():
 
     cardapios = cria_cardapios(cardapios_por_data)
 
+
+
+
     print("request para UNICAMP esta completo.")
+    # print(cardapios)
     return cardapios
 
 
@@ -164,8 +173,15 @@ def main():
 
 if __name__ == '__main__':
     main()
-# def cardapio_para_datas(data_strings):
 
 
-# @cache.memoize(timeout=60 * 5)  # cache com timeout de 5min
-# def get_next_cardapios(date_string, next)
+
+'''
+Error handling:
+
+- Nao funcionar com esse modulo, usar o outro. Informar isso ao app.
+- Definir custom Exceptions para cada etapa (metodo chamado pra obters os objetos Cardapio).
+- 
+
+
+'''

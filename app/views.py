@@ -5,7 +5,6 @@ from datetime import date
 
 
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -18,14 +17,21 @@ def get_all_cardapios():
 
     print("buscando todos os cardapios disponiveis...")
     # print(cardapios)
+
     if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
         date_string = date.today().strftime("%y-%m-%d")
-        return get_cardapios_date_next(date_string, 5)
+        cardapios = get_cardapios_date_next(date_string, 5)
+
+    cardapios = [c for c in cardapios if type(c) is Cardapio]
+
+
+    if len(cardapios) == 0:
+        return None, 500
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
 
     # print(json_response)
-    return json_response
+    return json_response, 200
 
 
 
@@ -40,8 +46,8 @@ def get_cardapios_date(date_string):
 def get_cardapios_date_next(date_string, next):
     cardapios = get_next_cardapios(date_string, next)
 
-    json_response = json.dumps(cardapios, cls=MyJsonEncoder)
-    return json_response
+    # json_response = json.dumps(cardapios, cls=MyJsonEncoder)
+    return cardapios
 
 
 
