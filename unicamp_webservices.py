@@ -122,9 +122,11 @@ def request_cardapio():
         "http": os.environ.get('FIXIE_URL', ''),
         "https": os.environ.get('FIXIE_URL', '')
     }
-    r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
-
-    raw_json = r.content
+    try:
+        r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
+        raw_json = r.content
+    except:
+        return []
 
 
     try:
