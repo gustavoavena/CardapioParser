@@ -4,9 +4,9 @@ import json
 
 class TipoRefeicao(Enum):
     ALMOCO = "Almoço"
-    ALMOCO_VEGETARIANO = "Almoço Vegetariano"
+    ALMOCO_VEGETARIANO = "Almoço vegetariano"
     JANTAR = "Jantar"
-    JANTAR_VEGETARIANO = "Jantar Vegetariano"
+    JANTAR_VEGETARIANO = "Jantar vegetariano"
 
     def to_json(self):
         return json.dumps(self.__dict__)
