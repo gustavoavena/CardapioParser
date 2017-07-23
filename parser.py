@@ -3,12 +3,15 @@ import requests
 from BandecoClasses import *
 import date_services
 
+from unicamp_webservices import limpa_especificos
+
 from app import cache
 
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 
 # TODO: error handling in case the menu doesn' follow the pattern, or there is no menu for that day (weekends).
+
 
 
 def pega_salada_sobremesa_suco(items):
@@ -64,6 +67,8 @@ def get_refeicao(tipo, soup):
         cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
     else:
         cardapio["pts"] = "-"
+
+    limpa_especificos(cardapio)
 
 
     return Refeicao(tipo=tipo, **cardapio) # retorna objeto da classe Refeicao utilizando dando "unwrap" no dictionario.

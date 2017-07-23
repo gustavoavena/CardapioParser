@@ -5,6 +5,19 @@ UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_js
 from app import cache
 import pprint
 
+import re
+
+def uppercase(matchobj):
+    return matchobj.group(0).upper()
+
+def capitalize(s):
+    return re.sub('^([a-z])|'
+                  '[\.|\?|\!]\s*([a-z])|'
+                  '\s+([a-z])(?=\.)|pts|'
+                  '\s*[\.,]?(ru|rs|ra)[\s\.,]', uppercase, s)
+
+
+
 
 def limpa_especificos(ref):
     """
@@ -14,6 +27,7 @@ def limpa_especificos(ref):
     ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
     ref['observacoes'] = ref['observacoes'].replace('</font>', '')
     ref['pts'] = ref['pts'].replace('pts', 'PTS')  # TODO
+    ref['observacoes'] = capitalize(ref['observacoes'])
 
 
 
