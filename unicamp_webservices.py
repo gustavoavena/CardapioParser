@@ -14,7 +14,7 @@ def capitalize(s):
     return re.sub('^([a-z])|'
                   '[\.|\?|\!]\s*([a-z])|'
                   '\s+([a-z])(?=\.)|pts|'
-                  '\s*[\.,]?(ru|rs|ra)[\s\.,]', uppercase, s)
+                  '[\s\.,]*(ru|rs|ra)[\s\.,]', uppercase, s)
 
 
 
