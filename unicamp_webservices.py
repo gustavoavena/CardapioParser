@@ -16,6 +16,11 @@ def capitalize(s):
                   '\s+([a-z])(?=\.)|'
                   '[\s,\.]*(ru|rs|ra)[\s,\.]', uppercase, s)
 
+def clean_spaces(s):
+    s = re.sub('\s{2,}|\n', ' ', s)
+    s = re.sub('\s\:\s*', ': ', s)
+    return s
+
 
 
 
@@ -27,7 +32,11 @@ def limpa_especificos(ref):
     ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
     ref['observacoes'] = ref['observacoes'].replace('</font>', '')
     ref['observacoes'] = capitalize(ref['observacoes'])
-    ref['pts'] = ref['pts'].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
+    ref['observacoes'] = clean_spaces(ref['observacoes'])
+
+
+    for key in ['pts', 'prato_principal']:
+        ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
 
 
 
