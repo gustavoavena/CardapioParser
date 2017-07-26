@@ -13,7 +13,7 @@ def uppercase(matchobj):
 def capitalize(s):
     return re.sub('^([a-z])|'
                   '[\.|\?|\!]\s*([a-z])|'
-                  '\s+([a-z])(?=\.)|pts|'
+                  '\s+([a-z])(?=\.)|'
                   '[\s,\.]*(ru|rs|ra)[\s,\.]', uppercase, s)
 
 
@@ -26,8 +26,8 @@ def limpa_especificos(ref):
     """
     ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
     ref['observacoes'] = ref['observacoes'].replace('</font>', '')
-    ref['pts'] = ref['pts'].replace('pts', 'PTS')  # TODO
     ref['observacoes'] = capitalize(ref['observacoes'])
+    ref['pts'] = ref['pts'].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
 
 
 
