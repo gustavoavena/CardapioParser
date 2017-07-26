@@ -70,7 +70,7 @@ def limpa_chaves(refeicoes_list):
 
 
 
-def limpa_nao_informado(cardapio):
+def limpa_nao_informado(cardapio): # TODO: melhorar isso depois
     attributes = ['guarnicao', 'pts']
 
     for at in attributes:
