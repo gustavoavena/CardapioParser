@@ -34,8 +34,7 @@ def limpa_especificos(ref):
     ref['observacoes'] = capitalize(ref['observacoes'])
     ref['observacoes'] = clean_spaces(ref['observacoes'])
 
-    # for key in ref.keys():
-    #     ref[key] = ref[key].replace('Não informado', '-')
+    # for key in ref.keys():ref[key] = ref[key].replace('Não informado', '-')
 
 
     for key in ['pts', 'prato_principal']:
@@ -70,11 +69,26 @@ def limpa_chaves(refeicoes_list):
 
 
 
-def limpa_nao_informado(cardapio): # TODO: melhorar isso depois
+def limpa_nao_informado(cardapio): # TODO: melhorar isso depois. Muito zona e ruim...
     attributes = ['guarnicao', 'pts']
+    NAO_INF = 'Não informado'
+    DASH = '-'
+
+    try:
+        cardapio.almoco.guarnicao = cardapio.almoco.guarnicao.replace(NAO_INF, DASH)
+        cardapio.jantar.guarnicao = cardapio.jantar.guarnicao.replace(NAO_INF, DASH)
+
+        cardapio.almoco.pts = cardapio.almoco.pts.replace(NAO_INF, DASH)
+        cardapio.jantar.pts = cardapio.jantar.pts.replace(NAO_INF, DASH)
+    except AttributeError:
+        print("AttributeError limpando nao informado.")
+    except:
+        print("Erro desconhecido limpando nao informado.")
+
 
     for at in attributes:
         try:
+
             value = getattr(cardapio.almoco_vegetariano, at)
             value = value.replace('Não informado', getattr(cardapio.almoco, at))
             setattr(cardapio.almoco_vegetariano, at, value)
