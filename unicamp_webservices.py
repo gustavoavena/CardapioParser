@@ -34,6 +34,8 @@ def limpa_especificos(ref):
     ref['observacoes'] = capitalize(ref['observacoes'])
     ref['observacoes'] = clean_spaces(ref['observacoes'])
 
+    for key in ref.keys():
+        ref[key] = ref[key].replace('Não informado', '-')
 
     for key in ['pts', 'prato_principal']:
         ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
