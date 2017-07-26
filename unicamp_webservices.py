@@ -37,6 +37,7 @@ def limpa_especificos(ref):
     # for key in ref.keys():
     #     ref[key] = ref[key].replace('Não informado', '-')
 
+
     for key in ['pts', 'prato_principal']:
         ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
 
@@ -85,6 +86,7 @@ def limpa_nao_informado(cardapio):
             print("Erro desconhecido limpando nao informados.")
 
     return cardapio
+
 
 
 
