@@ -75,11 +75,13 @@ def limpa_nao_informado(cardapio):
 
     for at in attributes:
         try:
-            value = getattr(cardapio.almoco, at)
-            setattr(cardapio.almoco, at, value)
+            value = getattr(cardapio.almoco_vegetariano, at)
+            value = value.replace('Não informado', getattr(cardapio.almoco, at))
+            setattr(cardapio.almoco_vegetariano, at, value)
 
-            value = getattr(cardapio.jantar, at)
-            setattr(cardapio.jantar, at, value)
+            value = getattr(cardapio.jantar_vegetariano, at)
+            value = value.replace('Não informado', getattr(cardapio.jantar, at))
+            setattr(cardapio.jantar_vegetariano, at, value)
         except AttributeError as e:
             print("Attribute error!")
         except:
