@@ -34,8 +34,8 @@ def limpa_especificos(ref):
     ref['observacoes'] = capitalize(ref['observacoes'])
     ref['observacoes'] = clean_spaces(ref['observacoes'])
 
-    for key in ref.keys():
-        ref[key] = ref[key].replace('Não informado', '-')
+    # for key in ref.keys():
+    #     ref[key] = ref[key].replace('Não informado', '-')
 
     for key in ['pts', 'prato_principal']:
         ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
@@ -69,6 +69,22 @@ def limpa_chaves(refeicoes_list):
 
 
 
+def limpa_nao_informado(cardapio):
+    attributes = ['guarnicao', 'pts']
+
+    for at in attributes:
+        try:
+            value = getattr(cardapio.almoco, at)
+            setattr(cardapio.almoco, at, value)
+
+            value = getattr(cardapio.jantar, at)
+            setattr(cardapio.jantar, at, value)
+        except AttributeError as e:
+            print("Attribute error!")
+        except:
+            print("Erro desconhecido limpando nao informados.")
+
+    return cardapio
 
 
 
@@ -93,6 +109,7 @@ def cria_cardapios(cardapios_por_data):
         refeicoes = {chaves_para_tipos[r.tipo] : r for r in cardapios_por_data[data]}
         cardapios.append(Cardapio(data=data, **refeicoes))
 
+    cardapios = [limpa_nao_informado(c) for c in cardapios]
 
     return cardapios
 
