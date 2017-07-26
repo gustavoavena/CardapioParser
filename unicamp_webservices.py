@@ -14,7 +14,7 @@ def capitalize(s):
     return re.sub('^([a-z])|'
                   '[\.|\?|\!]\s*([a-z])|'
                   '\s+([a-z])(?=\.)|pts|'
-                  '.*[\s,\.]+(ru|rs|ra)[\s\.,]', uppercase, s)
+                  '[\s,\.]*(ru|rs|ra)[\s,\.]', uppercase, s)
 
 
 
@@ -175,7 +175,9 @@ def get_all_cardapios():
 
     cardapios = cria_cardapios(cardapios_por_data)
 
-    print("request para UNICAMP esta completo.")
+    if len(cardapios) > 0:
+        print("request para UNICAMP esta completo.")
+
     return cardapios
 
 
