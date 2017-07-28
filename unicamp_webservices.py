@@ -14,7 +14,7 @@ def capitalize(s):
     return re.sub('^([a-z])|'
                   '[\.|\?|\!]\s*([a-z])|'
                   '\s+([a-z])(?=\.)|'
-                  '[\s,\.]*(ru|rs|ra)[\s,\.]', uppercase, s)
+                  '[\s,\.]+(ru|rs|ra)[\s,\.]+', uppercase, s)
 
 def clean_spaces(s):
     s = re.sub('\s{2,}|\n', ' ', s)
@@ -31,7 +31,7 @@ def limpa_especificos(ref):
     """
     ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
     ref['observacoes'] = ref['observacoes'].replace('</font>', '')
-    ref['observacoes'] = capitalize(ref['observacoes'])
+    ref['observacoes'] = capitalize(capitalize(ref['observacoes'])) # chamar duas vezes pra resovler o problema do RA, que nao era alterado porque o RU dava match com a virgula primeiro.
     ref['observacoes'] = clean_spaces(ref['observacoes'])
 
     # for key in ref.keys():ref[key] = ref[key].replace('Não informado', '-')
