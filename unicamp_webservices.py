@@ -1,11 +1,47 @@
 import os, requests
 from BandecoClasses import *
+from app import app
+
+from cache_scheduler import CardapioCache
 
 UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_json.php"
-from app import cache
-import pprint
 
 import re
+import time
+
+
+
+
+
+
+@app.before_first_request
+def setup_webservices():
+    print("Setting up unicamp_webservices...")
+    # update_cache()
+    print(CardapioCache.cardapios)
+    # start_scheduler()
+
+
+
+def start_scheduler():
+    CardapioCache.scheduler.enter(50, 1, refresh_if_needed)
+    CardapioCache.scheduler.run()
+    print("Scheduler is running.")
+
+
+def update_cache():
+    print("Updating cache...")
+    CardapioCache.cardapios = get_all_cardapios()
+
+
+def refresh_if_needed():
+    ctime = time.gmtime()
+    print("Refresh called at {}:{}".format(ctime.tm_hour, ctime.tm_min))
+    if CardapioCache.should_update_cache():
+        update_cache()
+
+
+
 
 def uppercase(matchobj):
     return matchobj.group(0).upper()
@@ -22,8 +58,6 @@ def clean_spaces(s):
     return s
 
 
-
-
 def limpa_especificos(ref):
     """
     Faz modificacoes especificas, como remover tags HTML e transformar siglas em maiusculo.
@@ -33,8 +67,6 @@ def limpa_especificos(ref):
     ref['observacoes'] = ref['observacoes'].replace('</font>', '')
     ref['observacoes'] = capitalize(capitalize(ref['observacoes'])) # chamar duas vezes pra resovler o problema do RA, que nao era alterado porque o RU dava match com a virgula primeiro.
     ref['observacoes'] = clean_spaces(ref['observacoes'])
-
-    # for key in ref.keys():ref[key] = ref[key].replace('Não informado', '-')
 
 
     for key in ['pts', 'prato_principal']:
@@ -189,6 +221,7 @@ def request_cardapio():
         return []
 
 
+
     try:
         cardapios = json.loads(raw_json)
         refeicoes_list = cardapios['CARDAPIO']
@@ -198,6 +231,8 @@ def request_cardapio():
     except:
         print("erro deserializando conteudo do JSON.")
         refeicoes_list = []
+    else:
+        print("Request para a UNICAMP feito com sucesso.")
 
 
     return refeicoes_list
@@ -205,14 +240,12 @@ def request_cardapio():
 
 
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
-@cache.cached(timeout=(60*60), key_prefix='get_all_cardapios')
 def get_all_cardapios():
     """
     Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
     :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio.
     """
     refeicoes_list = request_cardapio() # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
-
 
     limpa_chaves(refeicoes_list) # faz a limpeza das informacoes.
 
@@ -227,8 +260,9 @@ def get_all_cardapios():
     return cardapios
 
 
+
 def main():
-    get_all_cardapios()
+    update_cache()
 
 
 if __name__ == '__main__':

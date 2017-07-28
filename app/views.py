@@ -2,8 +2,7 @@ from app import app
 from parser import *
 import unicamp_webservices
 from datetime import date
-
-
+from cache_scheduler import CardapioCache
 
 @app.route('/')
 @app.route('/index')
@@ -13,9 +12,10 @@ def index():
 
 @app.route('/cardapios', methods=['GET'])
 def get_all_cardapios():
-    cardapios = unicamp_webservices.get_all_cardapios()
+    # cardapios = unicamp_webservices.get_all_cardapios()
+    cardapios = CardapioCache.cardapios
 
-    print("buscando todos os cardapios disponiveis...")
+    # print("buscando todos os cardapios disponiveis...")
     # print(cardapios)
 
     if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
