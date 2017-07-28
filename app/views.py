@@ -28,6 +28,9 @@ def get_all_cardapios():
     if len(cardapios) == 0:
         return None, 500
 
+    if len(cardapios) > 10:
+        cardapios = cardapios[:10] # limita o retorno a 10 cardapios
+
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
 
     # print(json_response)
