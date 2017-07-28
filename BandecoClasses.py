@@ -31,6 +31,9 @@ class Refeicao:
         self.suco = suco
         self.observacoes = observacoes
 
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
     @staticmethod
     def fromDict(tipo, refeicoes):
         try:
@@ -79,6 +82,8 @@ class Cardapio:
         self.almoco_vegetariano = almoco_vegetariano
         self.jantar_vegetariano = jantar_vegetariano
 
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
     @staticmethod
     def fromRefeicoesDict(data, refeicoes):

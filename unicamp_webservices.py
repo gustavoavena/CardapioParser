@@ -1,4 +1,5 @@
 import os, requests
+
 from BandecoClasses import *
 from app import app
 
@@ -7,7 +8,6 @@ from cache_scheduler import CardapioCache
 UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_json.php"
 
 import re
-import time
 
 
 
@@ -17,28 +17,29 @@ import time
 @app.before_first_request
 def setup_webservices():
     print("Setting up unicamp_webservices...")
-    # update_cache()
+    CardapioCache.cardapios = get_all_cardapios()
     print(CardapioCache.cardapios)
-    # start_scheduler()
+    write_to_cardapio_cache(CardapioCache.cardapios)
 
 
 
-def start_scheduler():
-    CardapioCache.scheduler.enter(50, 1, refresh_if_needed)
-    CardapioCache.scheduler.run()
-    print("Scheduler is running.")
 
 
 def update_cache():
-    print("Updating cache...")
-    CardapioCache.cardapios = get_all_cardapios()
+    try:
+        print("Reading from cardapio_cache...")
+        f = open('cardapio_cache', 'r')
+        cardapio_list = eval(f.read())
+        cardapios = []
+        for v in cardapio_list:
+            cardapios.append(Cardapio(**v))
 
+        CardapioCache.cardapios = cardapios
+    except Exception as e:
+        print("Erro lendo cardapio_cache", type(e), e)
+    else:
+        print("CardapioCache singleton updated!")
 
-def refresh_if_needed():
-    ctime = time.gmtime()
-    print("Refresh called at {}:{}".format(ctime.tm_hour, ctime.tm_min))
-    if CardapioCache.should_update_cache():
-        update_cache()
 
 
 
@@ -100,8 +101,8 @@ def limpa_chaves(refeicoes_list):
 
 
 
-
-def limpa_nao_informado(cardapio): # TODO: melhorar isso depois. Muito zona e ruim...
+# TODO: melhorar isso depois. Muito zona e ruim...
+def limpa_nao_informado(cardapio):
     attributes = ['guarnicao', 'pts']
     NAO_INF = 'Não informado'
     DASH = '-'
@@ -237,7 +238,16 @@ def request_cardapio():
 
     return refeicoes_list
 
+def write_to_cardapio_cache(cardapios):
+    try:
+        f = open('cardapio_cache', 'w')
+        f.write(json.dumps(cardapios, cls=MyJsonEncoder))
+        f.close()
+    except Exception as e:
+        print("Exception: ", e)
 
+    else:
+        print("cardapio_cache updated successfully inside unicamp_webservices.")
 
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
 def get_all_cardapios():
@@ -256,6 +266,10 @@ def get_all_cardapios():
 
     if len(cardapios) > 0:
         print("request para UNICAMP esta completo.")
+    else:
+        print("unicamp_server falhou!")
+        # date_string = date.today().strftime("%y-%m-%d")
+        # return get_next_cardapios(date_string, 5)
 
     return cardapios
 

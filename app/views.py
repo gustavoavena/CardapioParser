@@ -1,8 +1,10 @@
 from app import app
 from parser import *
+from BandecoClasses import *
 import unicamp_webservices
 from datetime import date
 from cache_scheduler import CardapioCache
+
 
 @app.route('/')
 @app.route('/index')
@@ -13,6 +15,7 @@ def index():
 @app.route('/cardapios', methods=['GET'])
 def get_all_cardapios():
     # cardapios = unicamp_webservices.get_all_cardapios()
+    unicamp_webservices.update_cache()
     cardapios = CardapioCache.cardapios
 
     # print("buscando todos os cardapios disponiveis...")
