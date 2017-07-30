@@ -17,9 +17,9 @@ import re
 @app.before_first_request
 def setup_webservices():
     print("Setting up unicamp_webservices...")
-    CardapioCache.cardapios = get_all_cardapios()
+    # CardapioCache.cardapios = get_all_cardapios()
     print(CardapioCache.cardapios)
-    write_to_cardapio_cache(CardapioCache.cardapios)
+    # write_to_cardapio_cache(CardapioCache.cardapios)
 
 
 
@@ -239,6 +239,11 @@ def request_cardapio():
     return refeicoes_list
 
 def write_to_cardapio_cache(cardapios):
+    """
+
+    :param cardapios:
+    :return:
+    """
     try:
         f = open('cardapio_cache', 'w')
         f.write(json.dumps(cardapios, cls=MyJsonEncoder))

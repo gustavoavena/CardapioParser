@@ -1,2 +1,2 @@
-web: gunicorn app:app --timeout 90
+web: bash startup.sh
 
