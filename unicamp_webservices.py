@@ -168,7 +168,7 @@ def request_cardapio():
     try: # coloquei o try por fora so para casos de erro no len(raw_json) ou outro erro que nao pensei.
         if raw_json == b'' or len(raw_json) == 0:
             print("Usando servidor backup...")
-            r = requests.get("https://backup-unicamp-server.herokuapp.com", proxies=proxyDict)
+            r = requests.get("https://backup-unicamp-server.herokuapp.com")
             raw_json = r.content
     except Exception as e:
         print("Exception no backup request: ", e)
