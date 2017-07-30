@@ -1,3 +1,5 @@
+from functools import reduce
+
 from bs4 import BeautifulSoup
 import requests
 from BandecoClasses import *
@@ -32,6 +34,7 @@ def pega_salada_sobremesa_suco(items):
 
 
 
+
 def get_refeicao(tipo, soup):
     """
     Faz o parsing do cardapio de uma refeicao (e.g. almoco, jantar), dado o elemento em HTML contendo as informacoes.
@@ -41,34 +44,83 @@ def get_refeicao(tipo, soup):
     :return: dict com cardapio de uma refeicao.
     """
     items = [s for s in soup.get_text().split("\n") if s] # retira todas as tags de HTML, e armazena todos os elementos (strings nao vazias) em uma lista.
-    cardapio, items = pega_salada_sobremesa_suco(items)
 
-    cardapio["arroz_feijao"] = items.pop(0).capitalize()
+    cardapio = {}
 
-    obs = items.pop() # o ultimo item eh a observacao, que pode ter um ou dois elementos.
-    if "Observações:  " not in obs:
-        cardapio["observacoes"] = (items.pop().replace("Observações:  ", "Obs: ").capitalize() + obs.capitalize())
+    print(items)
+    observacoes = []
+
+    obs = items.pop()
+    print(obs)
+    while("Observações:" not in obs):
+        observacoes.append(obs)
+        obs = items.pop()
+
+    observacoes.append(obs)
+
+    observacoes.reverse()
+
+
+
+    observacao_final = reduce(lambda x, y: x+y, observacoes)
+    cardapio["observacoes"] = observacao_final.replace("Observações: ", "Obs: ").capitalize()
+
+    print(cardapio["observacoes"])
+
+    suco = items.pop()
+    cardapio["suco"] = suco.replace("SUCO:", "").capitalize()
+
+    sobremesa = items.pop()
+    cardapio["sobremesa"] = sobremesa.replace("SOBREMESA:", "").capitalize()
+
+    salada = items.pop()
+    cardapio["salada"] = salada.replace("SALADA:", "").capitalize()
+
+    prato_principal_list = []
+
+    pp = items.pop()
+
+    if "PTS" in pp:
+        cardapio["pts"] = pp.capitalize()
+        pp = items.pop()
     else:
-        cardapio["observacoes"] = obs.replace("Observações:  ", "Obs: ").capitalize()
+        cardapio["pts"] = "-"
 
-    ACRONIMOS = ["pts", " ru ", " ra ", " rs "]
+    if "PRATO PRINCIPAL:" not in pp:
+        cardapio["guarnicao"] = pp.replace("GUARNIÇÃO: ", "").capitalize()
+        pp = items.pop()
+    else:
+        cardapio["guarnicao"] = "-"
 
-    for sig in ACRONIMOS: # procura siglas e deixa elas em maiusculo.
-        cardapio["observacoes"].replace(sig, sig.upper())
 
+    prato_principal = pp.replace("PRATO PRINCIPAL:  ", "").replace("PRATO PRINCIPAL: ", "").capitalize()
 
-    # o primeiro item nesse ponto eh sempre o prato principal.
-    cardapio["prato_principal"] = items.pop(0).replace("PRATO PRINCIPAL:  ", "").capitalize()
+    # while ("PRATO PRINCIPAL:" not in pp):
+    #     prato_principal_list.append(pp)
+    #     obs = items.pop()
+
+    # prato_principal_list.append(pp)
+
+    # prato_principal_list = prato_principal_list.reverse()
+
+    # prato_principal = reduce(lambda x, y: x+y, prato_principal_list)
+
+    cardapio["prato_principal"] = prato_principal
+
+    print(prato_principal)
+
+    print(cardapio)
+
 
 
     # TODO: organizar isso da guarnicao e do PTS.
     # o que sobra eh a guarnicao e o pts.
-    cardapio["guarnicao"] = items[0].capitalize().replace("pts", "PTS")
+    # cardapio["guarnicao"] = items[0].capitalize().replace("pts", "PTS")
 
-    if len(items) == 2:
-        cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
-    else:
-        cardapio["pts"] = "-"
+    # if len(items) == 2:
+    #     cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
+    # else:
+    #     cardapio["pts"] = "-"
 
     limpa_especificos(cardapio)
 
@@ -121,7 +173,7 @@ def cardapio_para_datas(data_strings):
     return cardapios
 
 
-@cache.memoize(timeout=60 * 5) # cache com timeout de 5min
+# @cache.memoize(timeout=60 * 5) # cache com timeout de 5min
 def get_next_cardapios(date_string, next):
     """
     Fornece os cardapios dos *next* dias a partir da data fornecida em *date_string*.
