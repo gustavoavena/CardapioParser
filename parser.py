@@ -167,7 +167,7 @@ def cardapio_para_datas(data_strings):
     for data in data_strings:
         c = cardapio_por_data(data)
         if c is not None and len(c.__dict__.keys()) > 2:
-            cardapios.append(c)
+            cardapios.append(limpa_nao_informado(c))
 
     return cardapios
 

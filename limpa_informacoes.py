@@ -56,3 +56,41 @@ def limpa_chaves(refeicoes_list):
         except AttributeError as e:
             print("Refeicoes nao sao dicionarios")
 
+
+# TODO: melhorar isso depois. Muito zona e ruim...
+def limpa_nao_informado(cardapio):
+    attributes = ['guarnicao', 'pts']
+    NAO_INF = 'Não informado'
+    DASH = '-'
+
+    try:
+        cardapio.almoco.guarnicao = cardapio.almoco.guarnicao.replace(NAO_INF, DASH)
+        cardapio.jantar.guarnicao = cardapio.jantar.guarnicao.replace(NAO_INF, DASH)
+
+        cardapio.almoco.pts = cardapio.almoco.pts.replace(NAO_INF, DASH)
+        cardapio.jantar.pts = cardapio.jantar.pts.replace(NAO_INF, DASH)
+    except AttributeError:
+        print("AttributeError limpando nao informado.")
+    except:
+        print("Erro desconhecido limpando nao informado.")
+
+
+    for at in attributes:
+        try:
+
+            value = getattr(cardapio.almoco_vegetariano, at)
+            value = value.replace('Não informado', getattr(cardapio.almoco, at))
+            value = value.replace(' ', getattr(cardapio.almoco, at))
+            setattr(cardapio.almoco_vegetariano, at, value)
+
+            value = getattr(cardapio.jantar_vegetariano, at)
+            value = value.replace('Não informado', getattr(cardapio.jantar, at))
+            value = value.replace(' ', getattr(cardapio.jantar, at))
+            setattr(cardapio.jantar_vegetariano, at, value)
+        except AttributeError as e:
+            print("Attribute error!")
+        except:
+            print("Erro desconhecido limpando nao informados.")
+
+    return cardapio
+
