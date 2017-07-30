@@ -18,7 +18,7 @@ def main():
         print()
         print("Exception at heroku_cache: ", e)
     else:
-        print("cardapio_cache updated successfully by the heroku scheduler.")
+        print("cardapio_cache updated successfully by the heroku_cache script.")
 
 
 if __name__ == '__main__':
