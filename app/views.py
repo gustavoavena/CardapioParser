@@ -19,7 +19,7 @@ def get_all_cardapios():
 
     if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
         date_string = date.today().strftime("%y-%m-%d")
-        cardapios = get_cardapios_date_next(date_string, 5)
+        cardapios = get_cardapios_date_next(date_string)
 
     cardapios = [c for c in cardapios if type(c) is Cardapio]
 
@@ -36,11 +36,17 @@ def get_all_cardapios():
     return json_response, 200
 
 
+@app.route('/parser', methods=['GET'])
+def parser_test():
+    date_string = date.today().strftime("%y-%m-%d")
+    cardapios = get_next_cardapios(date_string, 10)
+    print(cardapios)
+    return json.dumps(cardapios, cls=MyJsonEncoder)
 
 
 @app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
-def get_cardapios_date_next(date_string, next):
-    cardapios = get_next_cardapios(date_string, next)
+def get_cardapios_date_next(date_string):
+    cardapios = get_next_cardapios(date_string, 10)
 
     # json_response = json.dumps(cardapios, cls=MyJsonEncoder)
     return cardapios

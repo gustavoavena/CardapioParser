@@ -43,7 +43,7 @@ class Refeicao:
 
     def __str__(self):
         out = "Tipo: " + self.tipo
-        out += "{}\nsobremesa: {}\nsuco: {}\n".format(self.prato_principal, self.sobremesa, self.suco)
+        out += " {}\nsobremesa: {}\nsuco: {}\n".format(self.prato_principal, self.sobremesa, self.suco)
         return out
 
     @staticmethod
@@ -82,15 +82,17 @@ class Cardapio:
         self.almoco_vegetariano = almoco_vegetariano
         self.jantar_vegetariano = jantar_vegetariano
 
+
     def __init__(self, **entries):
         self.__dict__.update(entries)
 
     @staticmethod
     def fromRefeicoesDict(data, refeicoes):
         try:
-            return Cardapio(data=data, almoco=refeicoes[TipoRefeicao.ALMOCO], jantar=refeicoes[TipoRefeicao.JANTAR], almoco_vegetariano=refeicoes[TipoRefeicao.ALMOCO_VEGETARIANO], jantar_vegetariano=refeicoes[TipoRefeicao.JANTAR_VEGETARIANO])
+            c =  Cardapio(data=data, almoco=refeicoes[TipoRefeicao.ALMOCO], jantar=refeicoes[TipoRefeicao.JANTAR], almoco_vegetariano=refeicoes[TipoRefeicao.ALMOCO_VEGETARIANO], jantar_vegetariano=refeicoes[TipoRefeicao.JANTAR_VEGETARIANO])
+            return c
         except KeyError as e:
-            print("Problema com key no convenience init de Cardapio.")
+            print("Problema com key no convenience init de Cardapio: ", e)
 
 
 

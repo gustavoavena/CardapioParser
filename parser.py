@@ -8,6 +8,8 @@ import date_services
 from limpa_informacoes import *
 from app import cache
 
+from pprint import pprint
+
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 
@@ -47,11 +49,11 @@ def get_refeicao(tipo, soup):
 
     cardapio = {}
 
-    print(items)
+    # print(items)
     observacoes = []
 
     obs = items.pop()
-    print(obs)
+    # print(obs)
     while("Observações:" not in obs):
         observacoes.append(obs)
         obs = items.pop()
@@ -60,12 +62,9 @@ def get_refeicao(tipo, soup):
 
     observacoes.reverse()
 
-
-
     observacao_final = reduce(lambda x, y: x+y, observacoes)
-    cardapio["observacoes"] = observacao_final.replace("Observações: ", "Obs: ").capitalize()
+    cardapio["observacoes"] = observacao_final.replace("Observações:  ", "").replace("Observações: ", "").capitalize()
 
-    print(cardapio["observacoes"])
 
     suco = items.pop()
     cardapio["suco"] = suco.replace("SUCO:", "").capitalize()
@@ -76,7 +75,6 @@ def get_refeicao(tipo, soup):
     salada = items.pop()
     cardapio["salada"] = salada.replace("SALADA:", "").capitalize()
 
-    prato_principal_list = []
 
     pp = items.pop()
 
@@ -93,34 +91,25 @@ def get_refeicao(tipo, soup):
         cardapio["guarnicao"] = "-"
 
 
+    last = items.pop()
+
+    if last is not None and "ARROZ" in last:
+        cardapio["arroz_feijao"] = last.capitalize()
+    else:
+        cardapio["arroz_feijao"] = "Arroz e feijão"
+
+
     prato_principal = pp.replace("PRATO PRINCIPAL:  ", "").replace("PRATO PRINCIPAL: ", "").capitalize()
 
-    # while ("PRATO PRINCIPAL:" not in pp):
-    #     prato_principal_list.append(pp)
-    #     obs = items.pop()
 
-    # prato_principal_list.append(pp)
-
-    # prato_principal_list = prato_principal_list.reverse()
-
-    # prato_principal = reduce(lambda x, y: x+y, prato_principal_list)
 
     cardapio["prato_principal"] = prato_principal
 
-    print(prato_principal)
 
-    print(cardapio)
-
+    # pprint(cardapio)
 
 
-    # TODO: organizar isso da guarnicao e do PTS.
-    # o que sobra eh a guarnicao e o pts.
-    # cardapio["guarnicao"] = items[0].capitalize().replace("pts", "PTS")
 
-    # if len(items) == 2:
-    #     cardapio["pts"] = items[1].capitalize().replace("pts", "PTS")
-    # else:
-    #     cardapio["pts"] = "-"
 
     limpa_especificos(cardapio)
 
@@ -144,13 +133,22 @@ def cardapio_por_data(data_string):
 
     tipos_refeicoes = list(TipoRefeicao) # lista os tipos de refeicao para iterarmos sobre eles.
 
+    chaves_para_tipos = {
+        'Almoço': 'almoco',
+        'Almoço vegetariano': 'almoco_vegetariano',
+        'Jantar': 'jantar',
+        'Jantar vegetariano': 'jantar_vegetariano'
+    }
+
     refeicoes = {}
 
+
     for i, m in enumerate(meals[1:]):
-        refeicoes[tipos_refeicoes[i]] = get_refeicao(tipos_refeicoes[i].value, m)
+        v = list(chaves_para_tipos.values())[i]
+        refeicoes[v] = get_refeicao(tipos_refeicoes[i].value, m)
 
 
-    return Cardapio.fromRefeicoesDict(data=data_string, refeicoes=refeicoes) # instacia um objeto Cardapio
+    return Cardapio(data=data_string, **refeicoes) # instacia um objeto Cardapio
 
 
 
@@ -168,7 +166,8 @@ def cardapio_para_datas(data_strings):
 
     for data in data_strings:
         c = cardapio_por_data(data)
-        cardapios.append(c)
+        if c is not None and len(c.__dict__.keys()) > 2:
+            cardapios.append(c)
 
     return cardapios
 
