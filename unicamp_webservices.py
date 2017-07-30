@@ -158,8 +158,22 @@ def request_cardapio():
         r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
         raw_json = r.content
     except:
-        return []
+        print("Erro no primeiro request para UNICAMP.")
+        raw_json = b''
+    else:
+        print("Request para UNICAMP terminou ")
 
+
+
+    try: # coloquei o try por fora so para casos de erro no len(raw_json) ou outro erro que nao pensei.
+        if raw_json == b'' or len(raw_json) == 0:
+            print("Usando servidor backup...")
+            r = requests.get("https://backup-unicamp-server.herokuapp.com", proxies=proxyDict)
+            raw_json = r.content
+    except Exception as e:
+        print("Exception no backup request: ", e)
+    else:
+        print("Request backup terminou sem exceptions.")
 
 
     try:
