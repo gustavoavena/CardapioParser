@@ -1,31 +1,27 @@
 import os, requests
-
 from BandecoClasses import *
 from app import app
+from limpa_informacoes import *
 
-from cache_scheduler import CardapioCache
+class CardapioCache:
+    cardapios = []
 
 UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_json.php"
-
-import re
-
-
-
 
 
 
 @app.before_first_request
 def setup_webservices():
     print("Setting up unicamp_webservices...")
-    # CardapioCache.cardapios = get_all_cardapios()
+    update_cache()
     print(CardapioCache.cardapios)
-    # write_to_cardapio_cache(CardapioCache.cardapios)
-
-
 
 
 
 def update_cache():
+    """
+    Responsavel por ler o arquivo cardapio_cache, que sera atualizado pelo script heroku_cache.py, e atualizar o CardapioCache.cardapios (o "singleton" que sera usado para retornar os cardapios para o usuario).
+    """
     try:
         print("Reading from cardapio_cache...")
         f = open('cardapio_cache', 'r')
@@ -41,63 +37,6 @@ def update_cache():
         print("CardapioCache singleton updated!")
 
 
-
-
-
-def uppercase(matchobj):
-    return matchobj.group(0).upper()
-
-def capitalize(s):
-    return re.sub('^([a-z])|'
-                  '[\.|\?|\!]\s*([a-z])|'
-                  '\s+([a-z])(?=\.)|'
-                  '[\s,\.]+(ru|rs|ra)[\s,\.]+', uppercase, s)
-
-def clean_spaces(s):
-    s = re.sub('\s{2,}|\n', ' ', s)
-    s = re.sub('\s\:\s*', ': ', s)
-    return s
-
-
-def limpa_especificos(ref):
-    """
-    Faz modificacoes especificas, como remover tags HTML e transformar siglas em maiusculo.
-    :param ref: dicionario da refeicao a ser "limpada"
-    """
-    ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
-    ref['observacoes'] = ref['observacoes'].replace('</font>', '')
-    ref['observacoes'] = capitalize(capitalize(ref['observacoes'])) # chamar duas vezes pra resovler o problema do RA, que nao era alterado porque o RU dava match com a virgula primeiro.
-    ref['observacoes'] = clean_spaces(ref['observacoes'])
-
-
-    for key in ['pts', 'prato_principal']:
-        ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
-
-
-
-def limpa_chaves(refeicoes_list):
-    """
-    Faz a "limpeza" dos cardapios. Transforma letras em minusculas ou titulos, remove tags HTML, etc.
-    Tambem altera o nome de algumas chaves para ficarem iguais aos atributos das classes definidas em BandecoClasses.
-    :param refeicoes_list: lista com dicionarios contendo as informacoes das refeicoes.
-    :return: lista atualizada apos a "limpeza"
-    """
-    for ref in refeicoes_list:
-        try:
-            for key in list(ref.keys()):
-                ref[key] = ref[key].capitalize()
-                ref[key.lower()] = ref.pop(key)
-
-            # modificar chaves para ficarem de acordo com os atributos da classe que eu defini.
-            ref['prato_principal'] = ref.pop('prato principal')
-            ref['arroz_feijao'] = ref.pop('acompanhamento')
-            ref['observacoes'] = ref.pop('obs')
-            limpa_especificos(ref)
-
-            # TODO: consertar essa gambiarra depois.
-
-        except AttributeError as e:
-            print("Refeicoes nao sao dicionarios")
 
 
 
@@ -238,21 +177,9 @@ def request_cardapio():
 
     return refeicoes_list
 
-def write_to_cardapio_cache(cardapios):
-    """
 
-    :param cardapios:
-    :return:
-    """
-    try:
-        f = open('cardapio_cache', 'w')
-        f.write(json.dumps(cardapios, cls=MyJsonEncoder))
-        f.close()
-    except Exception as e:
-        print("Exception: ", e)
 
-    else:
-        print("cardapio_cache updated successfully inside unicamp_webservices.")
+
 
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
 def get_all_cardapios():
@@ -273,8 +200,6 @@ def get_all_cardapios():
         print("request para UNICAMP esta completo.")
     else:
         print("unicamp_server falhou!")
-        # date_string = date.today().strftime("%y-%m-%d")
-        # return get_next_cardapios(date_string, 5)
 
     return cardapios
 

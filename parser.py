@@ -3,72 +3,16 @@ import requests
 from BandecoClasses import *
 import date_services
 
-# from unicamp_webservices import limpa_especificos
-
+from limpa_informacoes import *
 from app import cache
-import re
 
 
 URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
 
 # TODO: error handling in case the menu doesn' follow the pattern, or there is no menu for that day (weekends).
 
-# TODO: colcoar funcoes de limpeza num modulo separado.
-
-def uppercase(matchobj):
-    return matchobj.group(0).upper()
-
-def capitalize(s):
-    return re.sub('^([a-z])|'
-                  '[\.|\?|\!]\s*([a-z])|'
-                  '\s+([a-z])(?=\.)|'
-                  '[\s,\.]+(ru|rs|ra)[\s,\.]+', uppercase, s)
-
-def clean_spaces(s):
-    s = re.sub('\s{2,}|\n', ' ', s)
-    s = re.sub('\s\:\s*', ': ', s)
-    return s
 
 
-def limpa_especificos(ref):
-    """
-    Faz modificacoes especificas, como remover tags HTML e transformar siglas em maiusculo.
-    :param ref: dicionario da refeicao a ser "limpada"
-    """
-    ref['observacoes'] = ref['observacoes'].replace('<font color = "red">', '')
-    ref['observacoes'] = ref['observacoes'].replace('</font>', '')
-    ref['observacoes'] = capitalize(capitalize(ref['observacoes'])) # chamar duas vezes pra resovler o problema do RA, que nao era alterado porque o RU dava match com a virgula primeiro.
-    ref['observacoes'] = clean_spaces(ref['observacoes'])
-
-
-    for key in ['pts', 'prato_principal']:
-        ref[key] = ref[key].replace('pts', 'PTS').replace('Pts', 'PTS')  # vergonhoso, mas dps conserto
-
-
-
-def limpa_chaves(refeicoes_list):
-    """
-    Faz a "limpeza" dos cardapios. Transforma letras em minusculas ou titulos, remove tags HTML, etc.
-    Tambem altera o nome de algumas chaves para ficarem iguais aos atributos das classes definidas em BandecoClasses.
-    :param refeicoes_list: lista com dicionarios contendo as informacoes das refeicoes.
-    :return: lista atualizada apos a "limpeza"
-    """
-    for ref in refeicoes_list:
-        try:
-            for key in list(ref.keys()):
-                ref[key] = ref[key].capitalize()
-                ref[key.lower()] = ref.pop(key)
-
-            # modificar chaves para ficarem de acordo com os atributos da classe que eu defini.
-            ref['prato_principal'] = ref.pop('prato principal')
-            ref['arroz_feijao'] = ref.pop('acompanhamento')
-            ref['observacoes'] = ref.pop('obs')
-            limpa_especificos(ref)
-
-            # TODO: consertar essa gambiarra depois.
-
-        except AttributeError as e:
-            print("Refeicoes nao sao dicionarios")
 
 
 

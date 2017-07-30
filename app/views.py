@@ -3,7 +3,6 @@ from parser import *
 from BandecoClasses import *
 import unicamp_webservices
 from datetime import date
-from cache_scheduler import CardapioCache
 
 
 @app.route('/')
@@ -14,12 +13,9 @@ def index():
 
 @app.route('/cardapios', methods=['GET'])
 def get_all_cardapios():
-    # cardapios = unicamp_webservices.get_all_cardapios()
     unicamp_webservices.update_cache()
-    cardapios = CardapioCache.cardapios
+    cardapios = unicamp_webservices.CardapioCache.cardapios
 
-    # print("buscando todos os cardapios disponiveis...")
-    # print(cardapios)
 
     if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
         date_string = date.today().strftime("%y-%m-%d")
@@ -41,12 +37,6 @@ def get_all_cardapios():
 
 
 
-@app.route('/cardapios/date/<string:date_string>', methods=['GET'])
-def get_cardapios_date(date_string):
-    cardapio = cardapio_por_data(date_string)
-    json_response = json.dumps(cardapio, cls=MyJsonEncoder)
-    return json_response
-
 
 @app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
 def get_cardapios_date_next(date_string, next):
@@ -58,20 +48,6 @@ def get_cardapios_date_next(date_string, next):
 
 
 
-"""
-Quais metodos eu preciso AQUI:
-
-
-- cardapio_por_data(data_string: string) -> Cardapio
-    - OBS: Ele precisa de outros metodos, mas quando mudarmos o API, mudaremos a interface. O que importa
-    eh que as rotas tenham acesso a ESSES metodos, com esses parametros e esses retornos.
-
-- next_cardapios(date_string: string, next: int) -> [Cardapio]
-    - next_weekdays(next: int, start_date: datetime.date = date.today()) -> [String]
-    - cardapio_para_datas(data_strings: [string]) -> [Cardapio]
-
-
-"""
 
 
 
