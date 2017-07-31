@@ -79,13 +79,13 @@ def limpa_nao_informado(cardapio):
         try:
 
             value = getattr(cardapio.almoco_vegetariano, at)
-            value = value.replace('Não informado', getattr(cardapio.almoco, at))
-            value = value.replace(' ', getattr(cardapio.almoco, at))
+            value = value.replace(NAO_INF, getattr(cardapio.almoco, at))
+            value = getattr(cardapio.almoco, at) if value == ' ' else value
             setattr(cardapio.almoco_vegetariano, at, value)
 
             value = getattr(cardapio.jantar_vegetariano, at)
-            value = value.replace('Não informado', getattr(cardapio.jantar, at))
-            value = value.replace(' ', getattr(cardapio.jantar, at))
+            value = value.replace(NAO_INF, getattr(cardapio.jantar, at))
+            value = getattr(cardapio.jantar, at) if value == ' ' else value
             setattr(cardapio.jantar_vegetariano, at, value)
         except AttributeError as e:
             print("Attribute error!")
