@@ -10,7 +10,8 @@ def main():
         "apiKey": os.environ.get('FIREBASE_API_KEY'),
         "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
         "databaseURL": os.environ.get('FIREBASE_DB_URL'),
-        "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com"
+        "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com",
+        "serviceAccount": "./bandex-c2f82-firebase-adminsdk-msdgz-b90f16f4a6.json"
     }
 
 
