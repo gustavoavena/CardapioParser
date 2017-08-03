@@ -151,7 +151,7 @@ def request_cardapio():
         print("erro deserializando conteudo do JSON.")
         refeicoes_list = []
     else:
-        print("Request para a UNICAMP feito com sucesso.")
+        print("Unloading do JSON feito com sucesso.")
 
 
     return refeicoes_list
