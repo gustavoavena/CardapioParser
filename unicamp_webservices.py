@@ -126,20 +126,19 @@ def request_cardapio():
         print("Erro no primeiro request para UNICAMP.")
         raw_json = b''
     else:
-        print(raw_json)
         print("Request para UNICAMP terminou ")
 
 
 
-    try: # coloquei o try por fora so para casos de erro no len(raw_json) ou outro erro que nao pensei.
-        if raw_json == b'' or len(raw_json) == 0:
+    if raw_json == b'' or len(raw_json) == 0:
+        try:
             print("Usando servidor backup...")
             r = requests.get("https://backup-unicamp-server.herokuapp.com")
             raw_json = r.content
-    except Exception as e:
-        print("Exception no backup request: ", e)
-    else:
-        print("Request backup terminou sem exceptions.")
+        except Exception as e:
+            print("Exception no backup request: ", e)
+        else:
+            print("Request backup terminou sem exceptions.")
 
 
     try:
