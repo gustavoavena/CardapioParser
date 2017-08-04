@@ -126,6 +126,7 @@ def request_cardapio():
         print("Erro no primeiro request para UNICAMP.")
         raw_json = b''
     else:
+        print(raw_json)
         print("Request para UNICAMP terminou ")
 
 
