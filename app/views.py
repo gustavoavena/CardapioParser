@@ -1,5 +1,5 @@
 from app import app
-from parser import *
+import parser
 from BandecoClasses import *
 import unicamp_webservices
 from datetime import date
@@ -11,15 +11,11 @@ def index():
     return "Esse app ira fazer o parsing do cardapio da unicamp e retornar um JSON."
 
 
-@app.route('/cardapios', methods=['GET'])
+@app.route('/cardapios_test', methods=['GET'])
 def get_all_cardapios():
-    unicamp_webservices.update_cache()
-    cardapios = unicamp_webservices.CardapioCache.cardapios
+    cardapios = unicamp_webservices.get_all_cardapios()
 
 
-    if len(cardapios) == 0: # o unicamp webservices nao retornou nada.
-        date_string = date.today().strftime("%y-%m-%d")
-        cardapios = get_cardapios_date_next(date_string)
 
     cardapios = [c for c in cardapios if type(c) is Cardapio]
 
@@ -32,21 +28,21 @@ def get_all_cardapios():
 
     json_response = json.dumps(cardapios, cls=MyJsonEncoder)
 
-    # print(json_response)
+    # print("json_response: ", json_response)
     return json_response, 200
 
 
 @app.route('/parser', methods=['GET'])
 def parser_test():
     date_string = date.today().strftime("%y-%m-%d")
-    cardapios = get_next_cardapios(date_string, 10)
+    cardapios = parser.get_next_cardapios(date_string, 10)
     print(cardapios)
     return json.dumps(cardapios, cls=MyJsonEncoder)
 
 
 @app.route('/cardapios/date/<string:date_string>/next/<int:next>', methods=['GET'])
 def get_cardapios_date_next(date_string):
-    cardapios = get_next_cardapios(date_string, 10)
+    cardapios = parser.get_next_cardapios(date_string, 10)
 
     # json_response = json.dumps(cardapios, cls=MyJsonEncoder)
     return cardapios

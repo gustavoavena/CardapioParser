@@ -6,12 +6,10 @@ from BandecoClasses import *
 import date_services
 
 from limpa_informacoes import *
-from app import cache
-
-from pprint import pprint
 
 
-URL_TEMPLATE = "http://catedral.prefeitura.unicamp.br/cardapio.php?d="
+
+URL_TEMPLATE = "https://www.prefeitura.unicamp.br/apps/site/cardapio.php?d"
 
 # TODO: error handling in case the menu doesn' follow the pattern, or there is no menu for that day (weekends).
 
@@ -186,7 +184,7 @@ def get_next_cardapios(date_string, next):
     """
 
     date_strings = date_services.next_weekdays(next, start_date=date_string)
-    print("EXECUTOU get_next_cardapio")
+    # print("EXECUTOU get_next_cardapio")
     return cardapio_para_datas(date_strings)
 
 

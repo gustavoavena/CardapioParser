@@ -2,43 +2,14 @@ import os, requests
 from BandecoClasses import *
 from app import app
 from limpa_informacoes import *
+import parser
+from datetime import date
+
 
 class CardapioCache:
     cardapios = []
 
 UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_json.php"
-
-
-
-@app.before_first_request
-def setup_webservices():
-    print("Setting up unicamp_webservices...")
-    update_cache()
-    print(CardapioCache.cardapios)
-
-
-
-def update_cache():
-    """
-    Responsavel por ler o arquivo cardapio_cache, que sera atualizado pelo script heroku_cache.py, e atualizar o CardapioCache.cardapios (o "singleton" que sera usado para retornar os cardapios para o usuario).
-    """
-    try:
-        print("Reading from cardapio_cache...")
-        f = open('cardapio_cache', 'r')
-        cardapio_list = eval(f.read())
-        cardapios = []
-        for v in cardapio_list:
-            cardapios.append(Cardapio(**v))
-
-        CardapioCache.cardapios = cardapios
-    except Exception as e:
-        print("Erro lendo cardapio_cache", type(e), e)
-    else:
-        print("CardapioCache singleton updated!")
-
-
-
-
 
 
 
@@ -130,6 +101,7 @@ def request_cardapio():
 
 
 
+    # usar o backup server se o limite do add-on fixie foi atingido.
     if raw_json == b'' or len(raw_json) == 0:
         try:
             print("Usando servidor backup...")
@@ -137,6 +109,7 @@ def request_cardapio():
             raw_json = r.content
         except Exception as e:
             print("Exception no backup request: ", e)
+            raw_json = b''
         else:
             print("Request backup terminou sem exceptions.")
 
@@ -160,6 +133,23 @@ def request_cardapio():
 
 
 
+
+
+def use_parser():
+    try:
+        print("Usando parser para obter cardapios...")
+        date_string = date.today().strftime("%y-%m-%d")
+        cardapios = parser.get_next_cardapios(date_string, 10)
+    except:
+        print("Uso do parser falhou.")
+        cardapios = []
+    else:
+        print("Parser executado com sucesso.")
+
+    return cardapios
+
+
+
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
 def get_all_cardapios():
     """
@@ -177,20 +167,23 @@ def get_all_cardapios():
 
     if len(cardapios) > 0:
         print("request para UNICAMP esta completo.")
-    else:
+        return cardapios
+    else: # usar o parser se os requests para os APIs todos falharam.
         print("unicamp_server falhou!")
-
-    return cardapios
-
+        return use_parser()
 
 
-def main():
-    update_cache()
 
 
-if __name__ == '__main__':
-    main()
-
+#
+# def main():
+#     print("unicamp_webservices main() has no purpose.")
+#     # update_cache()
+#
+#
+# if __name__ == '__main__':
+#     main()
+#
 
 
 '''

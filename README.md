@@ -4,13 +4,12 @@ Esse app implementado em Flask é a ponte entre a fonte de informação dos card
 Ele obtem os cardapios e instancia objetos das classes Cardapio e Refeicao. Esse objetos são serializados e enviados como JSON para o app. Dessa maneira, caso a fonte do cardapio seja alterada, o app não será afetado, contanto que o servidor retorne objetos dessas classes.
 
 O processo:
-
 - Obter dados dos cardápios.
 - Instanciar objetos da classe Cardapio.
 - Retornar esses objetos em uma lista, no formato JSON.
 
 
-Além disso, esse servidor implementa um cache e, breve, um log dos requests, para que possamos obter estatísticas sobre os usuários.
+Além disso, esse servidor implementa um cache.
 
 Installing:
 
@@ -25,6 +24,3 @@ Execute: 'pip install -r requirements.txt'
 Execute: 'chmod a+x run.py'
 
 To run the app: 'python run.py'
-
-
-
