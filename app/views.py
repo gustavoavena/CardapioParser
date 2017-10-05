@@ -53,6 +53,12 @@ def get_cardapios_date_next(date_string):
 
 @app.route('/tokens', methods=['PUT', 'POST'])
 def create_update_token():
+    """
+    Recebe JSON no formato: {"token": <token_id: string>, "vegetariano": <bool>}
+
+
+    :return:
+    """
     data = json.loads(request.data)
     print(data)
 
@@ -61,6 +67,13 @@ def create_update_token():
     return "Device token registrado com sucesso" if ok else ("ERRO ao registrar device token", 500)
 
 
+
+@app.route('/tokens/<string:token>', methods=['DELETE'])
+def delete_token(token):
+
+    ok = cardapio_notifications.delete_token(token)
+
+    return "Device token removido com sucesso" if ok else ("ERRO ao removed device token", 500)
 
 
 

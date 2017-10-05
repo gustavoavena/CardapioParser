@@ -70,3 +70,5 @@ def delete_token(token):
     db.child('tokens').child(token).remove()
 
     print("Device token {} removido com sucesso.".format(token))
+
+    return True
