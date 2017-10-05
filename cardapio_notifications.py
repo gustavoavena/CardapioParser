@@ -12,6 +12,11 @@ from unicamp_webservices import get_all_cardapios
 
 
 def setup_firebase():
+    """
+    Instancia objeto de acesso do BD Firebase.
+
+    :return: o objeto do BD Firebase instanciado.
+    """
     config = {
         "apiKey": os.environ.get('FIREBASE_API_KEY'),
         "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
@@ -27,6 +32,13 @@ def setup_firebase():
 
 
 def update_or_create_token(token, vegetariano):
+    """
+    Registra device token ou atualiza os seus parametros "last_used" e/ou "vegetariano".
+
+    :param token: token a ser registrado ou atualizado.
+    :param vegetariano: preferencia de cardapio do usuario.
+    :return: True caso nao haja erros durante o processo.
+    """
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
 
     db = setup_firebase()
@@ -41,6 +53,12 @@ def update_or_create_token(token, vegetariano):
 
 
 def delete_token(token):
+    """
+    Remove device token do BD (firebase).
+
+    :param token: token a ser removido.
+    :return: True caso nao haja erros durante o processo.
+    """
     db = setup_firebase()
     db.child('tokens').child(token).remove()
 
@@ -49,30 +67,38 @@ def delete_token(token):
     return True
 
 
+
+
 # Metodos relacionados ao envio de push notifications.
-
-
-# TODO: diferenciar normal de vegetarianos!
-
 
 # TODO: meotodos em date_services, para saber se deve mandar notificacao ou nao e qual refeicao deve ser enviada.
 
 
-def push_next_notification(tradicional="Hoje teremos ***** para almoçar no bandeco.", vegetariano=""):
+def push_next_notification(tradicional, vegetariano):
+    """
+    Utiliza a biblioteca apns2 para enviar push notifications para os usuarios registrados.
 
+
+    :param tradicional: string de notificacao para o cardapio tradicional.
+    :param vegetariano: string de notificacao para o cardapio vegetariano.
+    :return:
+    """
+
+
+    # obtems device tokens dos usuarios registrados
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
+    # separa usuarios vegetarianos
     tokens_tradicional = [t for t,d in tokens.items() if  d["vegetariano"] == False]
     tokens_vegetariano = [t for t, d in tokens.items() if d["vegetariano"]]
 
-
-
-
+    # cria 2 payloads diferentes para tradicional e vegetariano
     payload_tradicional = Payload(alert=tradicional, sound="default", badge=1)
     payload_vegetariano = Payload(alert=vegetariano, sound="default", badge=1)
 
 
+    # adiciona os objetos Notification (olhar codigo do apns2) para serem enviados em batch.
     notifications = []
 
     for t in tokens_tradicional:
@@ -84,7 +110,8 @@ def push_next_notification(tradicional="Hoje teremos ***** para almoçar no band
 
     topic = 'com.Gustavo.Avena.BandecoUnicamp'
 
-    file_path = ""
+
+    # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
 
     key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
 
@@ -92,16 +119,14 @@ def push_next_notification(tradicional="Hoje teremos ***** para almoçar no band
         f = open("key.pem", "w")
         f.write(key_file_content)
 
-        file_path =  "key.pem"
-    else:
+        file_path = "key.pem"
+    else: # development. Usar o certificado armazenado localmente para development.
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 
     client = APNsClient(file_path, use_sandbox=True, use_alternative_port=False)
 
-
     client.send_notification_batch(notifications, topic)
 
-    # client.send_notification_batch(tokens_vegetariano, payload_vegetariano, topic)
 
 
 
@@ -110,7 +135,7 @@ def cardapio_valido():
     Pega o proximo cardapio disponivel e confere se é do dia de hoje. Retorna None quando nao há cardapio disponivel e
     quando for fim de semana ou feriado.
 
-    :return: o proximo cardapio, se for valido, e None caso contrário.
+    :return: o proximo cardapio, se for valido, ou None caso contrário.
     """
     cardapios = get_all_cardapios()
 
@@ -129,6 +154,13 @@ def cardapio_valido():
 
 
 def mandar_proxima_refeicao(refeicao):
+    """
+    Recebendo a refeicao (almoço ou jantar) a ser enviada, esse metodo cria a string da notificação e chama o método para envia-la
+    caso exista um cardapio valido (dia útil).
+
+
+    :param refeicao: string com valor "almoço" ou "jantar", indicando qual a refeicao a ser informada.
+    """
 
     cardapio = cardapio_valido()
 
@@ -155,8 +187,7 @@ def mandar_proxima_refeicao(refeicao):
 
 
 def main():
-
-    mandar_proxima_refeicao("almoço")
+    mandar_proxima_refeicao("jantar")
 
 
 if __name__ == '__main__':
