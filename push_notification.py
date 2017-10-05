@@ -1,7 +1,9 @@
 import time
 from apns import APNs, Frame, Payload
 
-apns = APNs(use_sandbox=True, cert_file='./../Certificates/bandex_push_notifications_dev_key.p12', key_file='key.pem')
+
+
+apns = APNs(use_sandbox=True, cert_file='./../Certificates/bandex_push_notifications_dev_cert.pem', key_file='./../Certificates/bandex_push_notifications_dev_key.pem')
 
 # senha dev: bandextest
 
@@ -24,3 +26,5 @@ apns.gateway_server.send_notification(token_hex, payload)
 # priority = 10
 # frame.add_item('b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b87', payload, identifier, expiry, priority)
 # apns.gateway_server.send_notification_multiple(frame)
+
+
