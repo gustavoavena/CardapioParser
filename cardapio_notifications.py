@@ -44,36 +44,21 @@ def setup_firebase():
 
 
 
-def create_token_dict(token, vegetariano):
-    return {"token": token, "last_used": date.today(), "vegetariano": vegetariano}
 
 
 def update_or_create_token(token, vegetariano):
-    tokens = {}
-    # tokens = get_all_tokens()
-
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
 
     db = setup_firebase()
     db.child('tokens').child(token).set(new_dict)
 
-    # if(device_options == None):
-    #     db.child('tokens').child(token).set(new_dict)
-    #
-    # try:
-    #     device_options = tokens[token]
-    #     device_options["last_used"] = date.today()
-    #     device_options["vegetariano"] = vegetariano
-    # except KeyError:
-    #     print("Registrando device token: {}...".format(token))
-    #     tokens[token] = {}
-    #     tokens[token]["last_used"] = date.today()
-    #     tokens[token]["vegetariano"] = vegetariano
-    # else:
-    #     print("Device token {} atualizado.".format(token))
+
+    print("Device token {} registrado com sucesso.".format(token))
 
 
-    # save_all_tokens()
 
-    # ou melhor ainda: atualizar somente esse token no firebase.
+def delete_token(token):
+    db = setup_firebase()
+    db.child('tokens').child(token).remove()
 
+    print("Device token {} removido com sucesso.".format(token))
