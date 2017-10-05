@@ -63,6 +63,7 @@ def push_next_notification(mensagem="Hoje teremos ***** para almoçar no bandeco
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
+    # TODO: separar tradicional de vegetariano
 
 
 
