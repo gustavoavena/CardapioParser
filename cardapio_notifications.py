@@ -2,7 +2,7 @@
 from datetime import date
 import os
 import pyrebase
-from apns2.client import APNsClient
+from apns2.client import APNsClient, Notification, NotificationPriority
 from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
 
@@ -58,17 +58,29 @@ def delete_token(token):
 # TODO: meotodos em date_services, para saber se deve mandar notificacao ou nao e qual refeicao deve ser enviada.
 
 
-def push_next_notification(mensagem="Hoje teremos ***** para almoçar no bandeco."):
+def push_next_notification(tradicional="Hoje teremos ***** para almoçar no bandeco.", vegetariano=""):
 
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
-    # TODO: separar tradicional de vegetariano
+    tokens_tradicional = [t for t,d in tokens.items() if  d["vegetariano"] == False]
+    tokens_vegetariano = [t for t, d in tokens.items() if d["vegetariano"]]
 
 
 
-    payload = Payload(alert=mensagem, sound="default", badge=1)
-    # TODO: pegar refeicao apropriada.
+
+    payload_tradicional = Payload(alert=tradicional, sound="default", badge=1)
+    payload_vegetariano = Payload(alert=vegetariano, sound="default", badge=1)
+
+
+    notifications = []
+
+    for t in tokens_tradicional:
+        notifications.append(Notification(t, payload_tradicional))
+
+    for t in tokens_vegetariano:
+        notifications.append(Notification(t, payload_vegetariano))
+
 
     topic = 'com.Gustavo.Avena.BandecoUnicamp'
 
@@ -86,7 +98,10 @@ def push_next_notification(mensagem="Hoje teremos ***** para almoçar no bandeco
 
     client = APNsClient(file_path, use_sandbox=True, use_alternative_port=False)
 
-    client.send_notification_batch(tokens, payload, topic)
+
+    client.send_notification_batch(notifications, topic)
+
+    # client.send_notification_batch(tokens_vegetariano, payload_vegetariano, topic)
 
 
 
@@ -103,10 +118,13 @@ def cardapio_valido():
         return None
 
     prox = cardapios[0]
+    today = date.today().strftime("%Y-%m-%d")
 
-    if(prox.data == date.today()):
+    if prox.data == today:
         return prox
     else:
+        print(today)
+        print(prox.data)
         return None
 
 
@@ -114,15 +132,35 @@ def mandar_proxima_refeicao(refeicao):
 
     cardapio = cardapio_valido()
 
-    template = "O bandeco terá {} hoje no {}."
+    template = "O bandeco hoje tem {} no {}."
+
+    # TODO: pegar refeicao apropriada.
 
     if cardapio != None:
         if refeicao == "almoço":
-            push_next_notification(template.format(cardapio.almoco.p))
+            tradicional = template.format(cardapio.almoco.prato_principal, refeicao)
+            vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal, refeicao)
+        elif refeicao == "jantar":
+            tradicional = template.format(cardapio.jantar.prato_principal, refeicao)
+            vegetariano = template.format(cardapio.jantar_vegetariano.prato_principal, refeicao)
+        else:
+            print("Erro ao determinar refeicao.")
+            return
+
+        push_next_notification(tradicional, vegetariano)
+    else:
+        print("Agora não há um cardápio válido.")
 
 
 
 
+def main():
+
+    mandar_proxima_refeicao("almoço")
+
+
+if __name__ == '__main__':
+    main()
 
 
 """

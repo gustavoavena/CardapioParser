@@ -1,6 +1,5 @@
 import os, requests
 from BandecoClasses import *
-from app import app
 from limpa_informacoes import *
 import parser
 from datetime import date
