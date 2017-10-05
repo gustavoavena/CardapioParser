@@ -23,10 +23,18 @@ import pyrebase
         - DELETE:
             - By HTTP request.
             - By expiration.
+            
+            
+            
+
+curl -X PUT -H "Content-Type: application/json" -d '{"token":"e77c39f01e46911ae21bc93a57dc55ca29d9a81325a22cc4fee340c75a2957d9","vegetariano" : false }' 127.0.0.1:5000/tokens
         
 
 
 """
+
+# Metodos relacionados ao armazenamento dos iOS Device Tokens, fornecidos pelos devices ao se registrarem para Push Notifications.
+
 
 def setup_firebase():
     config = {
@@ -43,9 +51,6 @@ def setup_firebase():
     return db
 
 
-
-
-
 def update_or_create_token(token, vegetariano):
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
 
@@ -54,6 +59,9 @@ def update_or_create_token(token, vegetariano):
 
 
     print("Device token {} registrado com sucesso.".format(token))
+
+    return True
+
 
 
 

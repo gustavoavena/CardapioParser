@@ -1,8 +1,10 @@
 from app import app
 import parser
+from flask import request
 from BandecoClasses import *
 import unicamp_webservices
 from datetime import date
+import cardapio_notifications
 
 
 @app.route('/')
@@ -46,6 +48,18 @@ def get_cardapios_date_next(date_string):
 
     # json_response = json.dumps(cardapios, cls=MyJsonEncoder)
     return cardapios
+
+
+
+@app.route('/tokens', methods=['PUT', 'POST'])
+def create_update_token():
+    data = json.loads(request.data)
+    print(data)
+
+    ok = cardapio_notifications.update_or_create_token(**data)
+
+    return "Device token registrado com sucesso" if ok else ("ERRO ao registrar device token", 500)
+
 
 
 
