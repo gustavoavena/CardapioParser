@@ -2,7 +2,8 @@
 from datetime import date
 import os
 import pyrebase
-
+from apns2.client import APNsClient
+from apns2.payload import Payload
 
 """
 
@@ -72,3 +73,39 @@ def delete_token(token):
     print("Device token {} removido com sucesso.".format(token))
 
     return True
+
+
+# Metodos relacionados ao envio de push notifications.
+
+
+
+
+def push_next_notification():
+
+    apns = APNs(use_sandbox=True, cert_file='./../Certificates/bandex_push_notifications_dev_cert.pem',
+                key_file='./../Certificates/bandex_push_notifications_dev_key.pem')
+
+    frame = Frame()
+    identifier = 1
+    expiry = time.time() + 3600
+    priority = 10
+    payload = Payload(alert="Hello World!", sound="default", badge=1)
+    # TODO: pegar refeicao apropriada.
+
+
+    db = setup_firebase()
+    tokens = db.child('tokens')
+
+
+
+    token_hex = 'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b87'
+    payload = Payload(alert="Hello World!", sound="default", badge=1)
+    client = APNsClient('key.pem', use_sandbox=True, use_alternative_port=False)
+    client.send_notification(token_hex, payload, topic)
+
+    for t in tokens:
+            print(t)
+            frame.add_item(t, payload, identifier, expiry, priority)
+
+    apns.gateway_server.send_notification_multiple(frame)
+
