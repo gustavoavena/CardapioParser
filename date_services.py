@@ -1,4 +1,4 @@
-from datetime import *
+from datetime import date, timedelta
 
 
 URL_DATE_FORMAT = "%y-%m-%d"
@@ -19,3 +19,9 @@ def next_weekdays(next, start_date = date.today()):
 
     return date_strings
 
+
+
+def segunda_a_sexta():
+    today = date.today()
+
+    return today.weekday() in range(0, 5) # retorna true se for um dia de segunda a sexta.
