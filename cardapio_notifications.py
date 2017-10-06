@@ -1,10 +1,14 @@
 
-from datetime import date
+from datetime import date, datetime
 import os
 import pyrebase
 from apns2.client import APNsClient, Notification
 from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
+
+from date_services import segunda_a_sexta
+import heroku_cache
+
 
 
 
@@ -101,6 +105,7 @@ def push_next_notification(tradicional, vegetariano):
     # adiciona os objetos Notification (olhar codigo do apns2) para serem enviados em batch.
     notifications = []
 
+
     for t in tokens_tradicional:
         notifications.append(Notification(t, payload_tradicional))
 
@@ -112,7 +117,6 @@ def push_next_notification(tradicional, vegetariano):
 
 
     # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
-
     key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
 
     if key_file_content != None:
@@ -120,12 +124,16 @@ def push_next_notification(tradicional, vegetariano):
         f.write(key_file_content)
 
         file_path = "key.pem"
+
     else: # development. Usar o certificado armazenado localmente para development.
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 
     client = APNsClient(file_path, use_sandbox=True, use_alternative_port=False)
 
     client.send_notification_batch(notifications, topic)
+
+    today = datetime.utcnow()
+    print("Push notifications sent on {} UTC.".format(today.strftime("%A, %b %d, %H:%M:%S")))
 
 
 
@@ -137,7 +145,15 @@ def cardapio_valido():
 
     :return: o proximo cardapio, se for valido, ou None caso contrário.
     """
-    cardapios = get_all_cardapios()
+
+
+    # atualiza o firebase e pega os cardapios ao mesmo tempo. Gastando somente um request do proxy.
+    cardapios = heroku_cache.main()
+
+    if cardapios == None:
+        cardapios = get_all_cardapios()
+
+
 
     if len(cardapios) == 0:
         return None
@@ -162,11 +178,16 @@ def mandar_proxima_refeicao(refeicao):
     :param refeicao: string com valor "almoço" ou "jantar", indicando qual a refeicao a ser informada.
     """
 
+    if not segunda_a_sexta():
+        print("Nao deve haver notificação no sábado ou domingo.")
+        return None
+
+
     cardapio = cardapio_valido()
 
-    template = "O bandeco hoje tem {} no {}."
+    template = "Hoje tem {} no {}."
 
-    # TODO: pegar refeicao apropriada.
+
 
     if cardapio != None:
         if refeicao == "almoço":
@@ -187,7 +208,28 @@ def mandar_proxima_refeicao(refeicao):
 
 
 def main():
-    mandar_proxima_refeicao("jantar")
+
+    today = datetime.utcnow()
+    hour = today.hour
+
+
+    # horario em UTC! horario Brasil = UTC - 3h (talvez diferente em horario de verao).
+
+    if hour >= 13 and hour <= 15:
+        refeicao = "almoço"
+    elif hour >= 19 and hour <= 21:
+        refeicao = "jantar"
+    else:
+        print("Tentativa de envio de notificação em horário impropio.")
+        return
+
+
+
+    mandar_proxima_refeicao(refeicao)
+
+
+
+
 
 
 if __name__ == '__main__':

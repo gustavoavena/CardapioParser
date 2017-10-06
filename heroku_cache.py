@@ -22,17 +22,24 @@ def main():
     db = firebase.database()
 
     try:
-        f = open('cardapio_cache', 'w')
         cardapios = get_all_cardapios()
-        json_data = json.dumps(cardapios, cls=MyJsonEncoder)
-        f.write(json_data)
-        db.child("cardapios").set(json_data)
-        f.close()
+
+        if cardapios != None and len(cardapios) > 0:
+            json_data = json.dumps(cardapios, cls=MyJsonEncoder)
+            db.child("cardapios").set(json_data)
+        else:
+            print("Nenhum cardapio retornado ao tentar atualizar o Firebase.")
+            raise Exception
+
     except Exception as e:
-        print()
         print("Exception at heroku_cache: ", e)
+        return None
     else:
         print("Firebase atualizado com sucesso pelo script heroku_cache.")
+        return cardapios
+
+
+    return None
 
 
 
