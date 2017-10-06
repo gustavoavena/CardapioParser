@@ -2,7 +2,7 @@
 from datetime import date
 import os
 import pyrebase
-from apns2.client import APNsClient, Notification, NotificationPriority
+from apns2.client import APNsClient, Notification
 from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
 

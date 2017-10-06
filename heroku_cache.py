@@ -32,7 +32,7 @@ def main():
         print()
         print("Exception at heroku_cache: ", e)
     else:
-        print("cardapio_cache and firebase updated successfully by the heroku_cache script.")
+        print("Firebase atualizado com sucesso pelo script heroku_cache.")
 
 
 
