@@ -90,27 +90,28 @@ def request_cardapio():
         "https": os.environ.get('FIXIE_URL', '')
     }
     try:
+        print("Opcao 1: Executando request para o API da UNICAMP utilizando o proxy.")
         r = requests.get("https://webservices.prefeitura.unicamp.br/cardapio_json.php", proxies=proxyDict)
         raw_json = r.content
     except:
         print("Erro no primeiro request para UNICAMP.")
         raw_json = b''
     else:
-        print("Request para UNICAMP terminou ")
+        print("Request para API da UNICAMP terminou com sucesso.")
 
 
 
     # usar o backup server se o limite do add-on fixie foi atingido.
     if raw_json == b'' or len(raw_json) == 0:
         try:
-            print("Usando servidor backup...")
+            print("Opcao 2: Request para servidor backup...")
             r = requests.get("https://backup-unicamp-server.herokuapp.com")
             raw_json = r.content
         except Exception as e:
             print("Exception no backup request: ", e)
             raw_json = b''
         else:
-            print("Request backup terminou sem exceptions.")
+            print("Request para servidor backup terminou com sucesso.")
 
 
     try:
@@ -136,7 +137,7 @@ def request_cardapio():
 
 def use_parser():
     try:
-        print("Usando parser para obter cardapios...")
+        print("Opcao 3: Usando parser para obter cardapios...")
         date_string = date.today().strftime("%y-%m-%d")
         cardapios = parser.get_next_cardapios(date_string, 10)
     except:
@@ -165,10 +166,10 @@ def get_all_cardapios():
     cardapios = cria_cardapios(cardapios_por_data)
 
     if len(cardapios) > 0:
-        print("request para UNICAMP esta completo.")
+        print("Cardápios obtidos com sucesso.")
         return cardapios
     else: # usar o parser se os requests para os APIs todos falharam.
-        print("unicamp_server falhou!")
+        print("ERRO: não foi possível obter os cardápios com nenhum dos requests!")
         return use_parser()
 
 
