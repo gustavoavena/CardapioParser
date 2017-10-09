@@ -75,7 +75,6 @@ def delete_token(token):
 
 # Metodos relacionados ao envio de push notifications.
 
-# TODO: meotodos em date_services, para saber se deve mandar notificacao ou nao e qual refeicao deve ser enviada.
 
 
 def push_next_notification(tradicional, vegetariano):
@@ -119,11 +118,15 @@ def push_next_notification(tradicional, vegetariano):
     # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
     key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
 
+    print(key_file_content)
+
+
     if key_file_content != None:
-        f = open("key.pem", "w")
+        f = open("./key.pem", "w")
         f.write(key_file_content)
 
-        file_path = "key.pem"
+        f.close()
+        file_path = "./key.pem"
 
     else: # development. Usar o certificado armazenado localmente para development.
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
@@ -204,6 +207,18 @@ def mandar_proxima_refeicao(refeicao):
     else:
         print("Agora não há um cardápio válido.")
 
+
+
+def testar_notificacao():
+    template = "Hoje tem {} no {}."
+
+    cardapios = get_all_cardapios()
+    cardapio = cardapios[0]
+
+    tradicional = template.format(cardapio.almoco.prato_principal, "almoço")
+    vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal, "almoço")
+
+    push_next_notification(tradicional, vegetariano)
 
 
 
