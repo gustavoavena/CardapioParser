@@ -118,8 +118,6 @@ def push_next_notification(tradicional, vegetariano):
     # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
     key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
 
-    print(key_file_content)
-
 
     if key_file_content != None:
         f = open("./key.pem", "w")
@@ -188,6 +186,9 @@ def mandar_proxima_refeicao(refeicao):
 
     cardapio = cardapio_valido()
 
+    # h, m = datetime.utcnow().hour - 2, datetime.utcnow().minute
+    # hora = "{}:{} - ".format(h, str(m).zfill(2))
+
     template = "Hoje tem {} no {}."
 
 
@@ -210,7 +211,11 @@ def mandar_proxima_refeicao(refeicao):
 
 
 def testar_notificacao():
-    template = "Hoje tem {} no {}."
+
+    h, m = datetime.utcnow().hour - 2, datetime.utcnow().minute # retiro 2 por causa do horario de verao
+    hora = "{}:{} - ".format(h, str(m).zfill(2))
+
+    template = hora + "Hoje tem {} no {}."
 
     cardapios = get_all_cardapios()
     cardapio = cardapios[0]
