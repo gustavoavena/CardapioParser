@@ -195,11 +195,11 @@ def mandar_proxima_refeicao(refeicao):
 
     if cardapio != None:
         if refeicao == "almoço":
-            tradicional = template.format(cardapio.almoco.prato_principal, refeicao)
-            vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal, refeicao)
+            tradicional = template.format(cardapio.almoco.prato_principal.lower(), refeicao)
+            vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal.lower(), refeicao)
         elif refeicao == "jantar":
-            tradicional = template.format(cardapio.jantar.prato_principal, refeicao)
-            vegetariano = template.format(cardapio.jantar_vegetariano.prato_principal, refeicao)
+            tradicional = template.format(cardapio.jantar.prato_principal.lower(), refeicao)
+            vegetariano = template.format(cardapio.jantar_vegetariano.prato_principal.lower(), refeicao)
         else:
             print("Erro ao determinar refeicao.")
             return
@@ -220,8 +220,8 @@ def testar_notificacao():
     cardapios = get_all_cardapios()
     cardapio = cardapios[0]
 
-    tradicional = template.format(cardapio.almoco.prato_principal, "almoço")
-    vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal, "almoço")
+    tradicional = template.format(cardapio.almoco.prato_principal.lower(), "almoço")
+    vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal.lower(), "almoço")
 
     push_next_notification(tradicional, vegetariano)
 
