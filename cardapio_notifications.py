@@ -121,6 +121,9 @@ def push_next_notification(tradicional, vegetariano):
     # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
     key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
 
+    use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
+
+
 
     if key_file_content != None:
         print("Executando no heroku")
@@ -133,7 +136,7 @@ def push_next_notification(tradicional, vegetariano):
         print("Usando chave de development localmente...")
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 
-    client = APNsClient(file_path, use_sandbox=True, use_alternative_port=False)
+    client = APNsClient(file_path, use_sandbox=use_sandbox, use_alternative_port=False)
 
     client.send_notification_batch(notifications, topic)
 
@@ -219,7 +222,7 @@ def testar_notificacao():
     h, m = datetime.utcnow().hour - 2, datetime.utcnow().minute # retiro 2 por causa do horario de verao
     hora = "{}:{} - ".format(h, str(m).zfill(2))
 
-    template = hora + "Hoje tem {} no {}."
+    template = "Hoje tem {} no {}."
 
     cardapios = get_all_cardapios()
     cardapio = cardapios[0]
