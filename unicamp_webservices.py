@@ -101,17 +101,31 @@ def request_cardapio():
 
 
 
-    # usar o backup server se o limite do add-on fixie foi atingido.
+    # usar o backup server se o limite do add-on fixie foi atingido
     if raw_json == b'' or len(raw_json) == 0:
         try:
             print("Opcao 2: Request para servidor backup...")
             r = requests.get("https://backup-unicamp-server.herokuapp.com")
             raw_json = r.content
         except Exception as e:
-            print("Exception no backup request: ", e)
+            print("Exception no request para o PRIMEIRO servidor backup: ", e)
             raw_json = b''
         else:
-            print("Request para servidor backup terminou com sucesso.")
+            print("Request para o primeiro servidor backup terminou com sucesso.")
+
+
+
+    # usar o SEGUNDO backup server se o limite do fixie do primeiro foi atingido
+    if raw_json == b'' or len(raw_json) == 0:
+        try:
+            print("Opcao 3: Request para o SEGUNDO servidor backup...")
+            r = requests.get("https://backup-unicamp-server2.herokuapp.com")
+            raw_json = r.content
+        except Exception as e:
+            print("Exception no request para o SEGUNDO servidor backup: ", e)
+            raw_json = b''
+        else:
+            print("Request para o segundo servidor backup terminou com sucesso.")
 
 
     try:
@@ -137,7 +151,7 @@ def request_cardapio():
 
 def use_parser():
     try:
-        print("Opcao 3: Usando parser para obter cardapios...")
+        print("Opcao 4: Usando parser para obter cardapios...")
         date_string = date.today().strftime("%y-%m-%d")
         cardapios = parser.get_next_cardapios(date_string, 10)
     except:
