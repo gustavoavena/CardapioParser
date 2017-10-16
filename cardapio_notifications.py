@@ -96,6 +96,9 @@ def push_next_notification(tradicional, vegetariano):
     tokens_tradicional = [t for t,d in tokens.items() if  d["vegetariano"] == False]
     tokens_vegetariano = [t for t, d in tokens.items() if d["vegetariano"]]
 
+    # print("Tokens tradicionais: ", tokens_tradicional)
+    # print("Tokens vegetarianos: ", tokens_vegetariano)
+
     # cria 2 payloads diferentes para tradicional e vegetariano
     payload_tradicional = Payload(alert=tradicional, sound="default", badge=1)
     payload_vegetariano = Payload(alert=vegetariano, sound="default", badge=1)
@@ -120,13 +123,14 @@ def push_next_notification(tradicional, vegetariano):
 
 
     if key_file_content != None:
+        print("Executando no heroku")
         f = open("./key.pem", "w")
         f.write(key_file_content)
-
         f.close()
         file_path = "./key.pem"
 
     else: # development. Usar o certificado armazenado localmente para development.
+        print("Usando chave de development localmente...")
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 
     client = APNsClient(file_path, use_sandbox=True, use_alternative_port=False)
