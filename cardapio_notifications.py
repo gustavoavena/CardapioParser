@@ -26,7 +26,7 @@ def setup_firebase():
         "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
         "databaseURL": os.environ.get('FIREBASE_DB_URL'),
         "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com",
-        "serviceAccount": "./bandex-c2f82-firebase-adminsdk-msdgz-b90f16f4a6.json"
+        "serviceAccount": "./bandex_services_account.json"
     }
 
     firebase = pyrebase.initialize_app(config)
