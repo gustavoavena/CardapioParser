@@ -5,8 +5,8 @@ import os
 
 def main():
     try:
-        service_account = os.environ.get('FIREBASE_SERVICE_ACCOUNT')
-        f = open('./bandex_services_account.json', 'w')
+        service_account = os.environ.get("FIREBASE_SERVICE_ACCOUNT")
+        f = open("./bandex_services_account.json", "w")
         f.write(service_account)
         f.close()
     except Exception as e:
