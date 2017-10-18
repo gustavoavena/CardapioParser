@@ -1,8 +1,5 @@
 import os
 
-# Check Configuring Flask-Cache section for more details
-
-
 def main():
     try:
         service_account = os.environ.get('FIREBASE_SERVICE_ACCOUNT')
@@ -14,6 +11,8 @@ def main():
         f = open('./apns_key.pem', 'w')
         f.write(apns_key)
         f.close()
+
+        print("Escreveu e fechou os arquivos.")
 
     except Exception as e:
         print("Erro ao escrever no arquivo de service account e/ou apns_key.pem: ", e)
