@@ -5,7 +5,7 @@ from envparse import env
 
 def main():
     try:
-        service_account = env.json("FIREBASE_SERVICE_ACCOUNT")
+        service_account = env('FIREBASE_SERVICE_ACCOUNT', cast=str)
         f = open("./bandex_services_account.json", "w")
         f.write(service_account)
         f.close()
