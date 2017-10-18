@@ -127,7 +127,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
 
     if os.path.exists('apns_key.pem'):
         print("Executando no heroku")
-        file_path = "./key.pem"
+        file_path = "./apns_key.pem"
     else: # local development. Usar o certificado armazenado localmente para development.
         print("Usando chave de development localmente...")
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
