@@ -9,8 +9,14 @@ def main():
         f = open('./bandex_services_account.json', 'w')
         f.write(service_account)
         f.close()
+
+        apns_key = os.environ.get('APNS_PROD_KEY_CONTENT')
+        f = open('./apns_key.pem', 'w')
+        f.write(apns_key)
+        f.close()
+
     except Exception as e:
-        print("Erro ao escrever no arquivo de service account: ", e)
+        print("Erro ao escrever no arquivo de service account e/ou apns_key.pem: ", e)
     else:
         print("Service account configurado com sucesso.")
 
