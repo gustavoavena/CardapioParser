@@ -125,7 +125,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
     use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
 
 
-    if os.path.exists('apns_key.pem'):
+    if os.path.exists('./apns_key.pem'):
         print("Executando no heroku")
         file_path = "./apns_key.pem"
     else: # local development. Usar o certificado armazenado localmente para development.
