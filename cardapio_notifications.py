@@ -1,7 +1,6 @@
 
 from datetime import date, datetime
 import os
-import pyrebase
 from apns2.client import APNsClient, Notification
 from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
@@ -123,6 +122,16 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
 
     # separa o heroku de production do de teste
     use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
+
+
+    try:
+        apns_key = os.environ.get('APNS_PROD_KEY_CONTENT')
+        f = open('./apns_key.pem', 'w')
+        f.write(apns_key)
+        f.close()
+    except Exception as e:
+        print("Erro ao escrever no arquivo apns_key.pem: ", e)
+
 
 
     if os.path.exists('./apns_key.pem'):
