@@ -1,12 +1,12 @@
 import os
-from envparse import env
+
 # Check Configuring Flask-Cache section for more details
 
 
 def main():
     try:
-        service_account = env('FIREBASE_SERVICE_ACCOUNT', cast=str)
-        f = open("./bandex_services_account.json", "w")
+        service_account = os.environ.get('FIREBASE_SERVICE_ACCOUNT')
+        f = open('./bandex_services_account.json', 'w')
         f.write(service_account)
         f.close()
     except Exception as e:
