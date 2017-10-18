@@ -8,31 +8,11 @@ from unicamp_webservices import get_all_cardapios
 
 from date_services import segunda_a_sexta
 import heroku_cache
-
+from firebase import setup_firebase
 
 
 
 # Metodos relacionados ao armazenamento dos iOS Device Tokens, fornecidos pelos devices ao se registrarem para Push Notifications.
-
-
-def setup_firebase():
-    """
-    Instancia objeto de acesso do BD Firebase.
-
-    :return: o objeto do BD Firebase instanciado.
-    """
-    config = {
-        "apiKey": os.environ.get('FIREBASE_API_KEY'),
-        "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
-        "databaseURL": os.environ.get('FIREBASE_DB_URL'),
-        "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com",
-        "serviceAccount": "./bandex_services_account.json"
-    }
-
-    firebase = pyrebase.initialize_app(config)
-
-    db = firebase.database()
-    return db
 
 
 def update_or_create_token(token, vegetariano):
@@ -76,37 +56,44 @@ def delete_token(token):
 # Metodos relacionados ao envio de push notifications.
 
 
-
-def push_next_notification(tradicional, vegetariano):
+def get_device_tokens():
     """
-    Utiliza a biblioteca apns2 para enviar push notifications para os usuarios registrados.
+    Pega os device tokens no firebase e separa os tradicionais dos vegetarianos.
 
-
-    :param tradicional: string de notificacao para o cardapio tradicional.
-    :param vegetariano: string de notificacao para o cardapio vegetariano.
-    :return:
+    :return: uma tupla (toks_trad, toks_veg) contendo os tokens tradicionais e vegetarianos.
     """
-
 
     # obtems device tokens dos usuarios registrados
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
     # separa usuarios vegetarianos
-    tokens_tradicional = [t for t,d in tokens.items() if  d["vegetariano"] == False]
+    tokens_tradicional = [t for t, d in tokens.items() if d["vegetariano"] == False]
     tokens_vegetariano = [t for t, d in tokens.items() if d["vegetariano"]]
 
     # print("Tokens tradicionais: ", tokens_tradicional)
     # print("Tokens vegetarianos: ", tokens_vegetariano)
 
-    # cria 2 payloads diferentes para tradicional e vegetariano
-    payload_tradicional = Payload(alert=tradicional, sound="default", badge=1)
-    payload_vegetariano = Payload(alert=vegetariano, sound="default", badge=1)
+    return tokens_tradicional, tokens_vegetariano
 
+
+
+def get_notification_objects(msg_tradicional, msg_vegetariano):
+    """
+
+    :param msg_tradicional: mensagem da notificacao do cardapio tradicional.
+    :param msg_vegetariano: mensagem da notificacao do cardapio vegetariano.
+    :return: objetos de notificacao a serem enviados.
+    """
+    tokens_tradicional, tokens_vegetariano = get_device_tokens()
+
+
+    # cria 2 payloads diferentes para tradicional e vegetariano
+    payload_tradicional = Payload(alert=msg_tradicional, sound="default", badge=1)
+    payload_vegetariano = Payload(alert=msg_vegetariano, sound="default", badge=1)
 
     # adiciona os objetos Notification (olhar codigo do apns2) para serem enviados em batch.
     notifications = []
-
 
     for t in tokens_tradicional:
         notifications.append(Notification(t, payload_tradicional))
@@ -114,25 +101,34 @@ def push_next_notification(tradicional, vegetariano):
     for t in tokens_vegetariano:
         notifications.append(Notification(t, payload_vegetariano))
 
+    return notifications
+
+
+
+def push_next_notification(msg_tradicional, msg_vegetariano):
+    """
+    Utiliza a biblioteca apns2 para enviar push notifications para os usuarios registrados.
+
+
+    :param msg_tradicional: string de notificacao para o cardapio tradicional.
+    :param msg_vegetariano: string de notificacao para o cardapio vegetariano.
+    :return: None
+    """
+
+    notifications = get_notification_objects(msg_tradicional, msg_vegetariano)
+
 
     topic = 'com.Gustavo.Avena.BandecoUnicamp'
 
 
-    # caso esteja em Production, essa environment variable ira contera o conteudo do certificado APNS de production.
-    key_file_content = os.environ.get('APNS_PROD_KEY_CONTENT')
-
+    # separa o heroku de production do de teste
     use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
 
 
-
-    if key_file_content != None:
+    if os.path.exists('apns_key.pem'):
         print("Executando no heroku")
-        f = open("./key.pem", "w")
-        f.write(key_file_content)
-        f.close()
         file_path = "./key.pem"
-
-    else: # development. Usar o certificado armazenado localmente para development.
+    else: # local development. Usar o certificado armazenado localmente para development.
         print("Usando chave de development localmente...")
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 

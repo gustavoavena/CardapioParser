@@ -10,7 +10,7 @@ import cardapio_notifications
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Esse app ira fazer o parsing do cardapio da unicamp e retornar um JSON."
+    return "Bem vindo ao servidor do Bandex. Esse app ira se comunicar com o API da UNICAMP e vai instanciar objetos para serem utilizados no app para iOS. Além disso, ele é responsável pelo registro dos device tokens e pelas notificações push."
 
 
 @app.route('/cardapios_test', methods=['GET'])

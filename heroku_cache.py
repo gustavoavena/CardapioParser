@@ -1,25 +1,21 @@
 from BandecoClasses import MyJsonEncoder
 import json
-import os
 from unicamp_webservices import get_all_cardapios
-import pyrebase
+from firebase import setup_firebase
+
+
+"""
+
+Esse modulo é responsavel por atualizar os cardapios no Firebase. Ele será executado por um scheduler no heroku em tempos pre-determinados, para tentar
+manter os cardapios atualizados sem utilizar muitos requests do nosso proxy.
+
+OBS: nao alterei seu nome ainda porque tenho que copiar e colar ele no scheduler.
+
+"""
 
 def main():
 
-    config = {
-        "apiKey": os.environ.get('FIREBASE_API_KEY'),
-        "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
-        "databaseURL": os.environ.get('FIREBASE_DB_URL'),
-        "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com",
-        "serviceAccount": "./bandex_services_account.json"
-    }
-
-
-
-    firebase = pyrebase.initialize_app(config)
-
-
-    db = firebase.database()
+    db = setup_firebase()
 
     try:
         cardapios = get_all_cardapios()
