@@ -69,3 +69,4 @@ target/
 venv
 venv/*
 bandex_services_account.json
+bandex_services_account.json
