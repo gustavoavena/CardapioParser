@@ -34,7 +34,7 @@ def cria_cardapios(cardapios_por_data):
         refeicoes = {chaves_para_tipos[r.tipo] : r for r in cardapios_por_data[data]}
         cardapios.append(Cardapio(data=data, **refeicoes))
 
-    cardapios = [limpa_nao_informado(c) for c in cardapios]
+    # cardapios = [limpa_nao_informado(c) for c in cardapios]
 
     return cardapios
 
