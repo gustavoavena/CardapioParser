@@ -9,7 +9,7 @@ from limpa_informacoes import *
 
 
 
-URL_TEMPLATE = "https://www.prefeitura.unicamp.br/apps/site/cardapio.php?d"
+URL_TEMPLATE = "https://www.prefeitura.unicamp.br/apps/site/cardapio.php?d="
 
 # TODO: error handling in case the menu doesn' follow the pattern, or there is no menu for that day (weekends).
 
@@ -50,11 +50,17 @@ def get_refeicao(tipo, soup):
     # print(items)
     observacoes = []
 
+
     obs = items.pop()
     # print(obs)
+
+
     while("Observações:" not in obs):
         observacoes.append(obs)
-        obs = items.pop()
+        try:
+            obs = items.pop()
+        except:
+            return None
 
     observacoes.append(obs)
 
@@ -140,10 +146,17 @@ def cardapio_por_data(data_string):
 
     refeicoes = {}
 
+    if len(meals) < 4:
+        return None
 
     for i, m in enumerate(meals[1:]):
         v = list(chaves_para_tipos.values())[i]
-        refeicoes[v] = get_refeicao(tipos_refeicoes[i].value, m)
+        ref = get_refeicao(tipos_refeicoes[i].value, m)
+
+        if ref is None:
+            return None
+
+        refeicoes[v] = ref
 
 
     return Cardapio(data=data_string, **refeicoes) # instacia um objeto Cardapio
@@ -165,8 +178,11 @@ def cardapio_para_datas(data_strings):
     for data in data_strings:
         c = cardapio_por_data(data)
         if c is not None and len(c.__dict__.keys()) > 2:
+            print("Cardapio para data: {}.".format(data))
+            # print(c)
             cardapios.append(limpa_nao_informado(c))
 
+    print("len(cardapios) = {}".format(len(cardapios)))
     return cardapios
 
 
@@ -183,7 +199,8 @@ def get_next_cardapios(date_string, next):
     :return: lista com os objetos Cardapio contendo os cardapios das datas requisitadas.
     """
 
-    date_strings = date_services.next_weekdays(next, start_date=date_string)
+
+    date_strings = date_services.next_weekdays(next, start_date_string=date_string)
     # print("EXECUTOU get_next_cardapio")
     return cardapio_para_datas(date_strings)
 

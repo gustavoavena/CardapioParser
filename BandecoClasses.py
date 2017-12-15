@@ -97,7 +97,7 @@ class Cardapio:
 
 
     def __str__(self):
-        return "Cardapio\nData: {}\nAlmoco: \n  {}\nJantar: \n  {}\n".format(self.data, self.almoco, self.jantar)
+        return "Cardapio\nData: {}\nAlmoco:\n  {}\nJantar:\n  {}\n, Almoco Vegetariano:\n  {}\nJantar Vegetariano:\n  {}\n".format(self.data, self.almoco, self.jantar, self.almoco_vegetariano, self.jantar_vegetariano)
 
     @staticmethod
     def to_json(self):

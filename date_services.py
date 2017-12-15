@@ -1,10 +1,11 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
-URL_DATE_FORMAT = "%y-%m-%d"
+URL_DATE_FORMAT = "%Y-%m-%d"
 
-def next_weekdays(next, start_date = date.today()):
-    start_date = date.today()
+def next_weekdays(next, start_date_string = date.today().strftime("%Y-%m-%d")):
+    start_date = datetime.strptime(start_date_string, URL_DATE_FORMAT)
+
 
     date_strings = []
     counter = 0
