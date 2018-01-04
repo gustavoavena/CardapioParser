@@ -146,7 +146,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
     client.send_notification_batch(notifications, topic)
 
     today = datetime.utcnow()
-    print("Push notifications sent on {} UTC.".format(today.strftime("%A, %b %d, %H:%M:%S")))
+    print("{}Push notifications sent on {} UTC.".format( "[TESTING] " if use_sandbox else "", today.strftime("%A, %b %d, %H:%M:%S")))
 
 
 
