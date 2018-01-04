@@ -8,13 +8,22 @@ from unicamp_webservices import get_all_cardapios
 from date_services import segunda_a_sexta
 import heroku_cache
 from firebase import setup_firebase
+import pytz
 
+"""
+O usuarios poderao escolher se receberao notificacoes do almoco e/ou jantar e as horas que receberao.
+
+Almoco: 07:00-13:30, com precisao de 10min.
+Jantar: 14:00-19:00, com precisao de 10min.
+
+
+"""
 
 
 # Metodos relacionados ao armazenamento dos iOS Device Tokens, fornecidos pelos devices ao se registrarem para Push Notifications.
 
 
-def update_or_create_token(token, vegetariano):
+def update_or_create_token(token, vegetariano, almoco="11:00", jantar="17:00"):
     """
     Registra device token ou atualiza os seus parametros "last_used" e/ou "vegetariano".
 
@@ -23,6 +32,14 @@ def update_or_create_token(token, vegetariano):
     :return: True caso nao haja erros durante o processo.
     """
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
+
+    if almoco:
+        new_dict["almoco"] = almoco
+
+    if jantar:
+        new_dict["jantar"] = jantar
+
+
 
     db = setup_firebase()
     db.child('tokens').child(token).set(new_dict)
@@ -66,9 +83,18 @@ def get_device_tokens():
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
+    tz = pytz.timezone('America/Sao_Paulo')
+    today = datetime.now(tz)
+
+    hora_atual = "{}:{}".format(today.hour, today.minute)
+
+    # tomar cuidado com esse metodo de comparacao por causa de atrasos.
+
+    tokens = [{t: d} for t, d in tokens.items() if d["almoco"] == hora_atual or d["jantar"] == hora_atual]
+
     # separa usuarios vegetarianos
-    tokens_tradicional = [t for t, d in tokens.items() if d["vegetariano"] == False]
-    tokens_vegetariano = [t for t, d in tokens.items() if d["vegetariano"]]
+    tokens_tradicional = [t for t, d in tokens if d["vegetariano"] == False]
+    tokens_vegetariano = [t for t, d in tokens if d["vegetariano"]]
 
     # print("Tokens tradicionais: ", tokens_tradicional)
     # print("Tokens vegetarianos: ", tokens_vegetariano)
@@ -160,11 +186,7 @@ def cardapio_valido():
     """
 
 
-    # atualiza o firebase e pega os cardapios ao mesmo tempo. Gastando somente um request do proxy.
-    cardapios = heroku_cache.main()
-
-    if cardapios == None:
-        cardapios = get_all_cardapios()
+    cardapios = get_all_cardapios()
 
 
 
@@ -241,15 +263,16 @@ def testar_notificacao():
 
 def main():
 
-    today = datetime.utcnow()
+    # fuso horario sempre certo (independente do horario de verao).
+    tz = pytz.timezone('America/Sao_Paulo')
+    today = datetime.now(tz)
     hour = today.hour
 
 
-    # horario em UTC! horario Brasil = UTC - 3h (talvez diferente em horario de verao).
 
-    if hour >= 13 and hour <= 15:
+    if hour >= 7 and hour <= 13:
         refeicao = "almoço"
-    elif hour >= 19 and hour <= 21:
+    elif hour >= 14 and hour <= 19:
         refeicao = "jantar"
     else:
         print("Tentativa de envio de notificação em horário impropio.")

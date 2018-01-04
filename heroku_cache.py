@@ -1,6 +1,6 @@
 from BandecoClasses import MyJsonEncoder
 import json
-from unicamp_webservices import get_all_cardapios
+from unicamp_webservices import get_all_cardapios, request_data_from_unicamp
 from firebase import setup_firebase
 
 
@@ -8,8 +8,15 @@ from firebase import setup_firebase
 
 Esse modulo é responsavel por atualizar os cardapios no Firebase. Ele será executado por um scheduler no heroku em tempos pre-determinados, para tentar
 manter os cardapios atualizados sem utilizar muitos requests do nosso proxy.
+Eu modifiquei o unicamp_webservices para tambem armazenar o JSON original do API da unicamp, para facilitar a implementacao de notificacoes mais customizaveis.
 
-OBS: nao alterei seu nome ainda porque tenho que copiar e colar ele no scheduler.
+Agora, a funcao request_data_from_unicamp pega os dados da unicamp e armazena no firebase. Entao esse metodo so eh executado aqui, para nao gastarmos muitos requests do Fixie.
+
+A funcao get_all_cardapios chama a request cardapio, que pega os dados do JSON do firebase, nao diretamente com a unicamp, como era anteriormente.
+
+Assim, eu posso chamar a funcao get_all_cardapios de qualquer lugar da aplicacao sem me preocupar com requests do Fixie. Eu terei que fazer isso muitas vezes, por causa dos horarios de notificacao (que vao ser muitos).
+
+OBS: nao alterei o nome desse arquivo ainda porque tenho que copiar e colar ele no scheduler.
 
 """
 
@@ -18,8 +25,12 @@ def main():
     db = setup_firebase()
 
     try:
-        cardapios = get_all_cardapios()
+        # request para unicamp que atualiza o firebase.
+        raw_json = request_data_from_unicamp()
 
+        cardapios = get_all_cardapios(raw_json)
+
+        # atualiza os cardapios no firebase.
         if cardapios != None and len(cardapios) > 0:
             json_data = json.dumps(cardapios, cls=MyJsonEncoder)
             db.child("cardapios").set(json_data)

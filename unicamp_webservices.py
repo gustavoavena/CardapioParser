@@ -3,7 +3,7 @@ from BandecoClasses import *
 from limpa_informacoes import *
 import parser
 from datetime import date
-
+from firebase import setup_firebase
 
 class CardapioCache:
     cardapios = []
@@ -77,14 +77,12 @@ def cria_refeicoes(refeicoes_list):
     return cardapios_por_data
 
 
-
-
-def request_cardapio():
+def request_data_from_unicamp():
     """"
-    Responsavel por fazer o request ao webservices da UNICAMP.
+        Responsavel por fazer o request ao webservices da UNICAMP e armazenar a resposta no firebase.
 
-    Esse metodo configurao add-on do Heroku que garante que todos os outbounds requests utilizando esse proxy sao feitos a partir de um IP fixo.
-    """
+        Esse metodo configurao add-on do Heroku que garante que todos os outbounds requests utilizando esse proxy sao feitos a partir de um IP fixo.
+        """
     proxyDict = {
         "http": os.environ.get('FIXIE_URL', ''),
         "https": os.environ.get('FIXIE_URL', '')
@@ -99,8 +97,6 @@ def request_cardapio():
     else:
         print("Request para API da UNICAMP terminou com sucesso.")
 
-
-
     # usar o backup server se o limite do add-on fixie foi atingido
     if raw_json == b'' or len(raw_json) == 0:
         try:
@@ -112,8 +108,6 @@ def request_cardapio():
             raw_json = b''
         else:
             print("Request para o primeiro servidor backup terminou com sucesso.")
-
-
 
     # usar o SEGUNDO backup server se o limite do fixie do primeiro foi atingido
     if raw_json == b'' or len(raw_json) == 0:
@@ -127,6 +121,28 @@ def request_cardapio():
         else:
             print("Request para o segundo servidor backup terminou com sucesso.")
 
+
+    db = setup_firebase()
+
+    if raw_json == b'' or len(raw_json) == 0:
+        db.child("cardapio_raw_json").set(raw_json)
+        print("Firebase atualizado com o JSON original da UNICAMP.")
+        return raw_json
+    else:
+        print("Erro ao tentar armazenar JSON original no Firebase.")
+        return None
+
+
+
+
+
+def request_cardapio(raw_json):
+
+
+    # so faz request pro firebase se nao tiver o json.
+    if raw_json == None:
+        db = setup_firebase()
+        raw_json = db.child("cardapio_raw_json").get().val()
 
     try:
         cardapios = json.loads(raw_json)
@@ -165,12 +181,12 @@ def use_parser():
 
 
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
-def get_all_cardapios():
+def get_all_cardapios(raw_json=None):
     """
     Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
     :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio.
     """
-    refeicoes_list = request_cardapio() # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
+    refeicoes_list = request_cardapio(raw_json) # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
 
     limpa_chaves(refeicoes_list) # faz a limpeza das informacoes.
 
