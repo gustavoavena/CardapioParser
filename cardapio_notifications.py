@@ -73,6 +73,11 @@ def delete_token(token):
 # Metodos relacionados ao envio de push notifications.
 
 def same_time_with_margin(hora):
+
+    if hora == None:
+        return False
+
+
     tz = pytz.timezone('America/Sao_Paulo')
     today = datetime.now(tz)
 
