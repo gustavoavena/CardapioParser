@@ -98,7 +98,12 @@ def get_device_tokens():
 
     # tomar cuidado com esse metodo de comparacao por causa de atrasos.
 
+    print("len(tokens) = ", len(tokens))
+
     tokens = [dict(t, d) for t, d in tokens.items() if same_time_with_margin(d["almoco"]) or same_time_with_margin(d["jantar"])]
+
+    print("len(tokens) = ", len(tokens))
+
 
     # separa usuarios vegetarianos
     tokens_tradicional = [t for t, d in tokens if d["vegetariano"] == False]
@@ -179,8 +184,10 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
 
     client.send_notification_batch(notifications, topic)
 
-    today = datetime.utcnow()
-    print("{}Push notifications sent on {} UTC.".format( "[TESTING] " if use_sandbox else "", today.strftime("%A, %b %d, %H:%M:%S")))
+    tz = pytz.timezone('America/Sao_Paulo')
+    today = datetime.now(tz)
+
+    print("{}Push notifications sent on {}.".format( "[TESTING] " if use_sandbox else "", today.strftime("%A, %b %d, %H:%M:%S")))
 
 
 
