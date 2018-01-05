@@ -1,5 +1,5 @@
-import os
 import pyrebase
+import environment_vars
 
 
 """
@@ -16,15 +16,15 @@ def setup_firebase():
     :return: o objeto do BD Firebase instanciado.
     """
     config = {
-        "apiKey": os.environ.get('FIREBASE_API_KEY'),
-        "authDomain": os.environ.get('FIREBASE_PROJECT_ID') + ".firebaseapp.com",
-        "databaseURL": os.environ.get('FIREBASE_DB_URL'),
-        "storageBucket": os.environ.get('FIREBASE_PROJECT_ID') + ".appspot.com",
+        "apiKey": environment_vars.FIREBASE_API_KEY,
+        "authDomain": environment_vars.FIREBASE_PROJECT_ID,
+        "databaseURL": environment_vars.FIREBASE_DB_URL,
+        "storageBucket": environment_vars.FIREBASE_PROJECT_ID,
         "serviceAccount": "./bandex_services_account.json"
     }
 
     try:
-        service_account = os.environ.get('FIREBASE_SERVICE_ACCOUNT')
+        service_account = environment_vars.FIREBASE_SERVICE_ACCOUNT
         f = open('./bandex_services_account.json', 'w')
         f.write(service_account)
         f.close()

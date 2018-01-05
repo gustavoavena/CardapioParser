@@ -6,9 +6,10 @@ from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
 
 from date_services import segunda_a_sexta
-import heroku_cache
 from firebase import setup_firebase
 import pytz
+
+import environment_vars
 
 """
 O usuarios poderao escolher se receberao notificacoes do almoco e/ou jantar e as horas que receberao.
@@ -161,7 +162,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
 
 
     try:
-        apns_key = os.environ.get('APNS_PROD_KEY_CONTENT')
+        apns_key = environment_vars.APNS_PROD_KEY_CONTENT
         f = open('./apns_key.pem', 'w')
         f.write(apns_key)
         f.close()

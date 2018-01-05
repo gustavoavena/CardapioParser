@@ -1,9 +1,10 @@
-import os, requests
+import requests
 from BandecoClasses import *
 from limpa_informacoes import *
 import parser
 from datetime import date
 from firebase import setup_firebase
+import environment_vars
 
 class CardapioCache:
     cardapios = []
@@ -84,8 +85,8 @@ def request_data_from_unicamp():
         Esse metodo configurao add-on do Heroku que garante que todos os outbounds requests utilizando esse proxy sao feitos a partir de um IP fixo.
         """
     proxyDict = {
-        "http": os.environ.get('FIXIE_URL', ''),
-        "https": os.environ.get('FIXIE_URL', '')
+        "http": environment_vars.FIXIE_URL,
+        "https": environment_vars.FIXIE_URL
     }
     try:
         print("Opcao 1: Executando request para o API da UNICAMP utilizando o proxy.")
