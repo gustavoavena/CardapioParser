@@ -122,15 +122,23 @@ def request_data_from_unicamp():
             print("Request para o segundo servidor backup terminou com sucesso.")
 
 
-    db = setup_firebase()
+
+
+    # # Decode UTF-8 bytes to Unicode, and convert single quotes
+    # # to double quotes to make it valid JSON
+    raw_json = raw_json.decode('utf8').replace("'", '"')
+    #
+    # print("raw_json = ", raw_json)
+
 
     if raw_json == b'' or len(raw_json) == 0:
+        print("Erro ao tentar armazenar JSON original no Firebase.")
+        return None
+    else:
+        db = setup_firebase()
         db.child("cardapio_raw_json").set(raw_json)
         print("Firebase atualizado com o JSON original da UNICAMP.")
         return raw_json
-    else:
-        print("Erro ao tentar armazenar JSON original no Firebase.")
-        return None
 
 
 

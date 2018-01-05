@@ -71,6 +71,18 @@ def delete_token(token):
 
 # Metodos relacionados ao envio de push notifications.
 
+def same_time_with_margin(hora):
+    tz = pytz.timezone('America/Sao_Paulo')
+    today = datetime.now(tz)
+
+    minutes_today = int(today.hour * 60 + today.minute)
+
+    hours, minutes = map(int, "00:00".split(':'))
+    minutes_notification = hours * 60 + minutes
+
+    return abs(minutes_today - minutes_notification) < 3
+
+
 
 def get_device_tokens():
     """
@@ -83,14 +95,10 @@ def get_device_tokens():
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
-    tz = pytz.timezone('America/Sao_Paulo')
-    today = datetime.now(tz)
-
-    hora_atual = "{}:{}".format(today.hour, today.minute)
 
     # tomar cuidado com esse metodo de comparacao por causa de atrasos.
 
-    tokens = [{t: d} for t, d in tokens.items() if d["almoco"] == hora_atual or d["jantar"] == hora_atual]
+    tokens = [dict(t, d) for t, d in tokens.items() if same_time_with_margin(d["almoco"]) or same_time_with_margin(d["jantar"])]
 
     # separa usuarios vegetarianos
     tokens_tradicional = [t for t, d in tokens if d["vegetariano"] == False]

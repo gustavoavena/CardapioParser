@@ -40,6 +40,7 @@ def main():
 
     except Exception as e:
         print("Exception at heroku_cache: ", e)
+        # print(e.__traceback__.__annotations__)
         return None
     else:
         print("Firebase atualizado com sucesso pelo script heroku_cache.")

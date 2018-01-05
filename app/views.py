@@ -54,7 +54,9 @@ def get_cardapios_date_next(date_string):
 @app.route('/tokens', methods=['PUT', 'POST'])
 def create_update_token():
     """
-    Recebe JSON no formato: {"token": <token_id: string>, "vegetariano": <bool>}
+    Recebe JSON no formato: {"token": <token_id: string>, "vegetariano": <bool>, "almoco": <string>, "jantar": <string> }
+
+    Obs: almoco e jantar sao strings que representam o horario da notificacao (e.g. "13:00", "18:00"). Caso seja None, o usuario nao quer receber notificacao daquela refeicao.
 
 
     :return:
