@@ -98,11 +98,8 @@ def get_device_tokens():
 
     # tomar cuidado com esse metodo de comparacao por causa de atrasos.
 
-    print("len(tokens) = ", len(tokens))
+    tokens = [(t, d) for t, d in tokens.items() if same_time_with_margin(d["almoco"]) or same_time_with_margin(d["jantar"])]
 
-    tokens = [dict(t, d) for t, d in tokens.items() if same_time_with_margin(d["almoco"]) or same_time_with_margin(d["jantar"])]
-
-    print("len(tokens) = ", len(tokens))
 
 
     # separa usuarios vegetarianos
@@ -169,6 +166,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
         f.write(apns_key)
         f.close()
     except Exception as e:
+        os.remove('./apns_key.pem')
         print("Erro ao escrever no arquivo apns_key.pem: ", e)
 
 
