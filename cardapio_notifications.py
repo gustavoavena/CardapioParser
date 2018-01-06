@@ -74,7 +74,7 @@ def delete_token(token):
 
 def same_time_with_margin(hora):
 
-    if hora == None:
+    if hora is None:
         return False
 
 
@@ -86,11 +86,11 @@ def same_time_with_margin(hora):
     hours, minutes = map(int, hora.split(':'))
     minutes_notification = hours * 60 + minutes
 
-    return abs(minutes_today - minutes_notification) < 3
+    return abs(minutes_today - minutes_notification) <= 3
 
 
 
-def get_device_tokens():
+def get_device_tokens(refeicao):
     """
     Pega os device tokens no firebase e separa os tradicionais dos vegetarianos.
 
@@ -101,10 +101,16 @@ def get_device_tokens():
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
+    if refeicao == "almoço":
+        refeicao = "almoco" # consertando inconsistencia nos nomes de chaves e da mensagem...
 
-    # tomar cuidado com esse metodo de comparacao por causa de atrasos.
+    try:
+        tokens = [(t, d) for t, d in tokens.items() if same_time_with_margin(d[refeicao])]
+    except KeyError:
+        # o usuario nao quer receber notificacao nessa refeicao.
+        return [], []
 
-    tokens = [(t, d) for t, d in tokens.items() if same_time_with_margin(d["almoco"]) or same_time_with_margin(d["jantar"])]
+
 
 
 
@@ -119,14 +125,13 @@ def get_device_tokens():
 
 
 
-def get_notification_objects(msg_tradicional, msg_vegetariano):
+def get_notification_objects(msg_tradicional, msg_vegetariano, tokens_tradicional, tokens_vegetariano):
     """
 
     :param msg_tradicional: mensagem da notificacao do cardapio tradicional.
     :param msg_vegetariano: mensagem da notificacao do cardapio vegetariano.
     :return: objetos de notificacao a serem enviados.
     """
-    tokens_tradicional, tokens_vegetariano = get_device_tokens()
 
 
     # cria 2 payloads diferentes para tradicional e vegetariano
@@ -145,27 +150,7 @@ def get_notification_objects(msg_tradicional, msg_vegetariano):
     return notifications
 
 
-
-def push_next_notification(msg_tradicional, msg_vegetariano):
-    """
-    Utiliza a biblioteca apns2 para enviar push notifications para os usuarios registrados.
-
-
-    :param msg_tradicional: string de notificacao para o cardapio tradicional.
-    :param msg_vegetariano: string de notificacao para o cardapio vegetariano.
-    :return: None
-    """
-
-    notifications = get_notification_objects(msg_tradicional, msg_vegetariano)
-
-
-    topic = 'com.Gustavo.Avena.BandecoUnicamp'
-
-
-    # separa o heroku de production do de teste
-    use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
-
-
+def setup_apns_client(use_sandbox):
     try:
         apns_key = environment_vars.APNS_PROD_KEY_CONTENT
         f = open('./apns_key.pem', 'w')
@@ -175,23 +160,45 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
         os.remove('./apns_key.pem')
         print("Erro ao escrever no arquivo apns_key.pem: ", e)
 
-
-
     if os.path.exists('./apns_key.pem'):
         print("Executando no heroku")
         file_path = "./apns_key.pem"
-    else: # local development. Usar o certificado armazenado localmente para development.
+    else:  # local development. Usar o certificado armazenado localmente para development.
         print("Usando chave de development localmente...")
         file_path = './../Certificates/bandex_push_notifications_dev_key.pem'
 
     client = APNsClient(file_path, use_sandbox=use_sandbox, use_alternative_port=False)
 
+    return client
+
+def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
+    """
+    Utiliza a biblioteca apns2 para enviar push notifications para os usuarios registrados.
+
+
+    :param msg_tradicional: string de notificacao para o cardapio tradicional.
+    :param msg_vegetariano: string de notificacao para o cardapio vegetariano.
+    :return: None
+    """
+
+    tokens_tradicional, tokens_vegetariano = get_device_tokens(refeicao)
+
+    notifications = get_notification_objects(msg_tradicional, msg_vegetariano, tokens_tradicional, tokens_vegetariano)
+
+    topic = 'com.Gustavo.Avena.BandecoUnicamp'
+
+    # separa o heroku de production do de teste
+    use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
+
+
+    client = setup_apns_client(use_sandbox)
     client.send_notification_batch(notifications, topic)
+
 
     tz = pytz.timezone('America/Sao_Paulo')
     today = datetime.now(tz)
-
     env_name = "[TESTING] " if use_sandbox else ""
+
     print("{}Push notifications sent on {} to {} devices.".format(env_name, today.strftime("%A, %b %d, %H:%M:%S"), len(notifications)))
 
 
@@ -205,10 +212,7 @@ def cardapio_valido():
     :return: o proximo cardapio, se for valido, ou None caso contrário.
     """
 
-
     cardapios = get_all_cardapios()
-
-
 
     if len(cardapios) == 0:
         return None
@@ -237,15 +241,9 @@ def mandar_proxima_refeicao(refeicao):
         print("Nao deve haver notificação no sábado ou domingo.")
         return None
 
-
     cardapio = cardapio_valido()
 
-    # h, m = datetime.utcnow().hour - 2, datetime.utcnow().minute
-    # hora = "{}:{} - ".format(h, str(m).zfill(2))
-
     template = "Hoje tem {} no {}."
-
-
 
     if cardapio != None:
         if refeicao == "almoço":
@@ -258,16 +256,13 @@ def mandar_proxima_refeicao(refeicao):
             print("Erro ao determinar refeicao.")
             return
 
-        push_next_notification(tradicional, vegetariano)
+        push_next_notification(tradicional, vegetariano, refeicao)
     else:
         print("Agora não há um cardápio válido.")
 
 
 
 def testar_notificacao():
-
-    h, m = datetime.utcnow().hour - 2, datetime.utcnow().minute # retiro 2 por causa do horario de verao
-    hora = "{}:{} - ".format(h, str(m).zfill(2))
 
     template = "Hoje tem {} no {}."
 
@@ -277,7 +272,10 @@ def testar_notificacao():
     tradicional = template.format(cardapio.almoco.prato_principal.lower(), "almoço")
     vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal.lower(), "almoço")
 
-    push_next_notification(tradicional, vegetariano)
+
+    refeicao = "almoço"
+
+    push_next_notification(tradicional, vegetariano, refeicao)
 
 
 
@@ -287,7 +285,6 @@ def main():
     tz = pytz.timezone('America/Sao_Paulo')
     today = datetime.now(tz)
     hour = today.hour
-
 
 
     if hour >= 7 and hour <= 13:
