@@ -2,10 +2,10 @@ from functools import reduce
 
 from bs4 import BeautifulSoup
 import requests
-from BandecoClasses import *
+from models.bandex_classes import *
 import date_services
 
-from limpa_informacoes import *
+from parsing.limpa_informacoes import *
 
 
 

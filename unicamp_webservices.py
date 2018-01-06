@@ -1,10 +1,11 @@
 import requests
-from BandecoClasses import *
-from limpa_informacoes import *
+from models.bandex_classes import *
+from parsing.limpa_informacoes import *
 import parser
 from datetime import date
-from firebase import setup_firebase
-import environment_vars
+from persistence.firebase import setup_firebase
+from persistence import environment_vars
+
 
 class CardapioCache:
     cardapios = []

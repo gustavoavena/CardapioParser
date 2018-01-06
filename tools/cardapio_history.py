@@ -1,6 +1,5 @@
 import parser
-from datetime import date
-from BandecoClasses import MyJsonEncoder
+from models.bandex_classes import MyJsonEncoder
 import json
 
 

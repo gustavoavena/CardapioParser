@@ -1,3 +1,3 @@
-from cardapio_notifications import testar_notificacao
 
+from cardapio_notifications import testar_notificacao
 testar_notificacao()

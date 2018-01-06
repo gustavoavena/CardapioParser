@@ -1,7 +1,7 @@
-from BandecoClasses import MyJsonEncoder
+from models.bandex_classes import MyJsonEncoder
 import json
 from unicamp_webservices import get_all_cardapios, request_data_from_unicamp
-from firebase import setup_firebase
+from persistence.firebase import setup_firebase
 
 
 """

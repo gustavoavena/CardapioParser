@@ -1,10 +1,10 @@
 from app import app
 import parser
 from flask import request
-from BandecoClasses import *
+from models.bandex_classes import *
+import cardapio_notifications
 import unicamp_webservices
 from datetime import date
-import cardapio_notifications
 
 
 @app.route('/')

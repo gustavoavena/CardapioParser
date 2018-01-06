@@ -1,6 +1,5 @@
 import pyrebase
-import environment_vars
-
+from persistence import environment_vars
 
 """
 Responsavel pela configuracao do firebase.

@@ -1,5 +1,7 @@
 import os
 
+
+
 def main():
     try:
         service_account = os.environ.get('FIREBASE_SERVICE_ACCOUNT')

@@ -6,10 +6,10 @@ from apns2.payload import Payload
 from unicamp_webservices import get_all_cardapios
 
 from date_services import segunda_a_sexta
-from firebase import setup_firebase
+from persistence.firebase import setup_firebase
 import pytz
 
-import environment_vars
+from persistence import environment_vars
 
 """
 O usuarios poderao escolher se receberao notificacoes do almoco e/ou jantar e as horas que receberao.
@@ -191,7 +191,8 @@ def push_next_notification(msg_tradicional, msg_vegetariano):
     tz = pytz.timezone('America/Sao_Paulo')
     today = datetime.now(tz)
 
-    print("{}Push notifications sent on {}.".format( "[TESTING] " if use_sandbox else "", today.strftime("%A, %b %d, %H:%M:%S")))
+    env_name = "[TESTING] " if use_sandbox else ""
+    print("{}Push notifications sent on {} to {} devices.".format(env_name, today.strftime("%A, %b %d, %H:%M:%S"), len(notifications)))
 
 
 
