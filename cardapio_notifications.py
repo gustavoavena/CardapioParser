@@ -34,10 +34,10 @@ def update_or_create_token(token, vegetariano, almoco="11:00", jantar="17:00"):
     """
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
 
-    if almoco:
+    if almoco is not None:
         new_dict["almoco"] = almoco
 
-    if jantar:
+    if jantar is not None:
         new_dict["jantar"] = jantar
 
 
