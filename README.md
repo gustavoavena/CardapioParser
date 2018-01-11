@@ -5,6 +5,7 @@
 
 
 
+
 Esse app implementado em Flask é a ponte entre a fonte de informação dos cardápios do Bandeco e o app para iOS.
 
 Ele obtem os cardapios e instancia objetos das classes Cardapio e Refeicao. Esse objetos são serializados e salvos como JSON no Firebase Realtime Database. Dessa maneira, mantemos uma separacao bem definida entra a obtencao e a leitura dos cardapios.
@@ -17,13 +18,13 @@ Observacoes importantes:
     - O Fixie atua como um proxy para que o app tenha um outbound IP fixo e possa se comunicar com o API da prefeitura da UNICAMP (que possui whitelisting por IP). Como esse add-on possui um limite de 500 requests por mes no plano gratis, e importante que eu limite o numero de requests para o API da Unicamp. Esta bem evidente no codigo que muita coisa poderia ser feita de maneira melhor e mais organizada, mas nessas situacoes eu tive que optar por uma solucoes "piorres" por causa dessa limitacao dos requests.
 
 
-## O que esse web app faz?
+### O que esse web app faz?
 
 - Registra, atualiza e remove os push notifications tokens dos devices que desejam receber push notifications.
     - As informacoes de cada device (e.g. token, preferencias de horarios, etc) tambem sao mantidas no Firebase Realtime Database. As regras granulares de acesso permitem que eu mantenha os cardapios publicos (para serem lidos pelos devices) e os tokens privados (para serem acessados somente com autenticacao e autorizacao).
     - Isso e feito utilizando os endpoints definidos no arquivo `view.py`.
 
-### Ele utiliza o heroku scheduler para executar as seguintes tarefas:
+#### Ele utiliza o heroku scheduler para executar as seguintes tarefas:
 
 - Obter os cardapios com o API da prefeitura da UNICAMP e atualizar esses valores no Realtime Database do Firebase. O comando executado é `python heroku_cache.py` (preciso mudar o nome desse arquivo depois).
 
@@ -46,11 +47,14 @@ Installing:
 You must have on your computer: python 3, pip, virtualenv.
 
 
-Clone the repository.
+Setup the appropriate environment variables (all listed in the `persistence/environment_vars.py` module).
+
 Copy the path of your python 3 interpreter.
-`virtualenv venv -p [path_to_your_python_interpreter]`
-`source venv/bin/activate`
-`pip install -r requirements.txt`
-`chmod a+x run.py
+```
+virtualenv venv -p [path_to_your_python_interpreter]
+source venv/bin/activate
+pip install -r requirements.txt
+chmod a+x run.py
+```
 
 To run the app: `bash startup.sh`
