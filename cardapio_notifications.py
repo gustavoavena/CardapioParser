@@ -11,11 +11,58 @@ import pytz
 
 from persistence import environment_vars
 
+
 """
+
+Notas para mim: 
+
+- Armazenar tokens dos devices em um BD.
+    - Qual BD?
+        - Firebase!!!
+    - Armazenar com o que?
+        - Last used: Date.
+        - Vegetariano: Bool.
+        - Horarios para almoco e jantar (nil caso nao queria notificacao para aquela refeicao).
+        - (Futuramente) Pratos favoritos.
+    - Operacoes:
+        - UPDATE:
+            - Last used
+            - Vegetariano
+            - Horarios
+        - CREATE:
+            - DeviceNotificationToken
+        - DELETE:
+            - By HTTP request.
+            - By expiration.
+
+
+Como funciona esse modulo:
+
+
 O usuarios poderao escolher se receberao notificacoes do almoco e/ou jantar e as horas que receberao.
 
-Almoco: 07:00-13:30, com precisao de 10min.
-Jantar: 14:00-19:00, com precisao de 10min.
+Almoco: 07:00-13:30, com precisao de 30min.
+Jantar: 14:00-19:00, com precisao de 30min.
+
+
+
+Fluxo para mandar notificacao:
+
+- Criar trigger para executar a cada 10min no heroku scheduler. Esse trigger executa a funcao main desse modulo.
+    - Confere se é segunda a sexta.
+        - Se for, pega o primeiro cardapio.
+        - Confere se é o cardapio do mesmo dia (porque pode ser feriado).
+
+    - Ele chama um metodo que recebe almoco ou jantar como parametro (o trigger da manha passa almoco e o da tarde passa jantar).
+        - Esse metodo pega a refeicao, cria uma string e chama o metodo push_next_notification(mensagem).
+    - Definir quais usuarios devem receber notificacao naquele momento.
+        - Pega todos os tokens, separa os tradicionais dos vegetarianos e filtra para pegar so os que querem notificacao naquele momento.
+        - TODO: melhorar isso porque percorrer todos os tokens toda vez e uma solucao muito ineficiente (assintoticamente pelo menos).
+
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"token":"e77c39f01e46911ae21bc93a57dc55ca29d9a81325a22cc4fee340c75a2957d9","vegetariano" : false }' 127.0.0.1:5000/tokens
+
 
 
 """
@@ -73,6 +120,12 @@ def delete_token(token):
 # Metodos relacionados ao envio de push notifications.
 
 def same_time_with_margin(hora):
+    """
+    Compara um horario fornecido com o horario atual para decidir se uma notificacao deve ser enviada para o token correspondente a esse horario. Ele leva em consideracao um possivel atraso de ate 3min no heroku scheduler.
+
+    :param hora: horario a ser verificado
+    :return: booleano dizendo esta proximo o suficiente a hora atual para receber notificacao no momento.
+    """
 
     if hora is None:
         return False
@@ -92,7 +145,8 @@ def same_time_with_margin(hora):
 
 def get_device_tokens(refeicao):
     """
-    Pega os device tokens no firebase e separa os tradicionais dos vegetarianos.
+    Pega os device tokens no firebase, separa os tradicionais dos vegetarianos e filtra os tokens que devem receber notificacao no momento. Lembrando que o heroku scheduler vai rodar o script de notificacao a cada 10min.
+
 
     :return: uma tupla (toks_trad, toks_veg) contendo os tokens tradicionais e vegetarianos.
     """
@@ -105,6 +159,7 @@ def get_device_tokens(refeicao):
         refeicao = "almoco" # consertando inconsistencia nos nomes de chaves e da mensagem...
 
     try:
+        # filtra os tokens que devem receber notificacao no momento.
         tokens = [(t, d) for t, d in tokens.items() if same_time_with_margin(d[refeicao])]
     except KeyError:
         # o usuario nao quer receber notificacao nessa refeicao.
@@ -127,6 +182,8 @@ def get_device_tokens(refeicao):
 
 def get_notification_objects(msg_tradicional, msg_vegetariano, tokens_tradicional, tokens_vegetariano):
     """
+
+    Instancia os objetos de notificacao utilizados pelo modulo apns2. Para entender mais, olhar a documentacao dessa biblioteca.
 
     :param msg_tradicional: mensagem da notificacao do cardapio tradicional.
     :param msg_vegetariano: mensagem da notificacao do cardapio vegetariano.
@@ -151,6 +208,11 @@ def get_notification_objects(msg_tradicional, msg_vegetariano, tokens_tradiciona
 
 
 def setup_apns_client(use_sandbox):
+    """
+    Configura um cliente do servico apns2. Para mais informacoes, olhar a documentacao e o codigo dessa biblioteca.
+    :param use_sandbox:
+    :return: um objeto do tipo APNsClient para enviar push notifications.
+    """
     try:
         apns_key = environment_vars.APNS_PROD_KEY_CONTENT
         f = open('./apns_key.pem', 'w')
@@ -181,13 +243,15 @@ def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
     :return: None
     """
 
+    # separa tradicional e vegetariano e filtra tokens que querem receber notificacao agora para a refeicao fornecida.
     tokens_tradicional, tokens_vegetariano = get_device_tokens(refeicao)
 
+    # instancia objetos de notificacao a serem enviados usando a biblioteca apns2.
     notifications = get_notification_objects(msg_tradicional, msg_vegetariano, tokens_tradicional, tokens_vegetariano)
 
     topic = 'com.Gustavo.Avena.BandecoUnicamp'
 
-    # separa o heroku de production do de teste
+    # IMPORTANTE: define se estamos em development ou production! Com use_sandbox = True, os devices em modo teste recebem notificacoes. MUITO cuidado ao mexer aqui.
     use_sandbox = False if os.environ.get('PRODUCTION_ENVIRONMENT') != None else True
 
 
@@ -206,7 +270,7 @@ def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
 
 def cardapio_valido():
     """
-    Pega o proximo cardapio disponivel e confere se é do dia de hoje. Retorna None quando nao há cardapio disponivel e
+    Pega o proximo cardapio disponivel e confere se é do dia de hoje. Retorna None quando nao há cardapio disponivel ou
     quando for fim de semana ou feriado.
 
     :return: o proximo cardapio, se for valido, ou None caso contrário.
@@ -241,6 +305,7 @@ def mandar_proxima_refeicao(refeicao):
         print("Nao deve haver notificação no sábado ou domingo.")
         return None
 
+
     cardapio = cardapio_valido()
 
     template = "Hoje tem {} no {}."
@@ -263,6 +328,12 @@ def mandar_proxima_refeicao(refeicao):
 
 
 def testar_notificacao():
+    """
+    Funcao para testar o envio de notificacoes.
+
+    TODO: refatorar isso para mandar notificacoes para todos os tokens em development, independente do horario da notificacao.
+
+    """
 
     template = "Hoje tem {} no {}."
 
@@ -308,41 +379,3 @@ if __name__ == '__main__':
     main()
 
 
-"""
-- Armazenar tokens dos devices em um BD.
-    - Qual BD?
-        - Firebase!!!
-    - Armazenar com o que?
-        - Last used: Date.
-        - Vegetariano: Bool.
-        - (Futuramente) Horarios.
-        - (Futuramente) Pratos favoritos.
-    - Operacoes:
-        - UPDATE:
-            - Last used
-            - Vegetariano
-        - CREATE:
-            - DeviceNotificationToken
-        - DELETE:
-            - By HTTP request.
-            - By expiration.
-
-
-
-- Fluxo para mandar notificacao.
-
-- Criar trigger para executar 11am e 17h.
-    - Confere se é segunda a sexta.
-        - Se for, pega o primeiro cardapio.
-        - Confere se é o cardapio do mesmo dia (porque pode ser feriado).
-
-    - Ele chama um metodo que recebe almoco ou jantar como parametro (o trigger da manha passa almoco e o da tarde passa jantar).
-        - Esse metodo pega a refeicao, cria uma string e chama o metodo push_next_notification(mensagem).
-
-
-
-curl -X PUT -H "Content-Type: application/json" -d '{"token":"e77c39f01e46911ae21bc93a57dc55ca29d9a81325a22cc4fee340c75a2957d9","vegetariano" : false }' 127.0.0.1:5000/tokens
-
-
-
-"""

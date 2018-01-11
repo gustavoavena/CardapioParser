@@ -33,6 +33,8 @@ def main():
         # atualiza os cardapios no firebase.
         if cardapios != None and len(cardapios) > 0:
             json_data = json.dumps(cardapios, cls=MyJsonEncoder)
+
+            # tambem salva os raw_json no firebase para que o modulo de notificacoes nao precise pega-lo da unicamp toda vez.
             db.child("cardapios").set(json_data)
         else:
             print("Nenhum cardapio retornado ao tentar atualizar o Firebase.")
