@@ -20,6 +20,7 @@ UNICAMP_WEBSERVICES_URL = "https://webservices.prefeitura.unicamp.br/cardapio_js
 def cria_cardapios(cardapios_por_data):
     """
     Recebe objetos de Refeicao agrupados por data em um dicionario e retorna uma lista de objetos Cardapios a partir desse dicionario.
+
     :param cardapios_por_data: dicionario do tipo {String: [Refeicao]}, onde a string eh uma data.
     :return: lista com os objetos Cardapio instanciados.
     """
@@ -47,6 +48,8 @@ def cria_cardapios(cardapios_por_data):
 def cria_refeicoes(refeicoes_list):
     """
     Cria um dicionario que agrupas objetos da classe Refeicao por data a partir de uma lista de dicionarios contendo informacoes das refeicoes.
+
+
     :param refeicoes_list: Lista com refeicoes em dicionarios.
     :return: Dicionario que mapeia datas a uma lista com objetos Refeicao contendo o cardapios daquela data.
     """
@@ -83,7 +86,7 @@ def request_data_from_unicamp():
     """"
         Responsavel por fazer o request ao webservices da UNICAMP e armazenar a resposta no firebase.
 
-        Esse metodo configurao add-on do Heroku que garante que todos os outbounds requests utilizando esse proxy sao feitos a partir de um IP fixo.
+        Esse metodo configura o add-on do Heroku que garante que todos os outbounds requests utilizando esse proxy sao feitos a partir de um IP fixo.
         """
     proxyDict = {
         "http": environment_vars.FIXIE_URL,
@@ -147,6 +150,13 @@ def request_data_from_unicamp():
 
 
 def request_cardapio(raw_json):
+    """
+    Obtem o JSON original contendo todas as informacoes dos proximos cardapios e retorna uma lista com as refeicoes em dicionarios, para comecar o processo de criacao dos objetos de tipo Refeicao e Cardapio.
+
+
+    :param raw_json: parametro opcional que contem as informacoes obtidas com o API da Unicamp em formato de JSON. Caso nao seja passado (acontece no envio das push notifications), essas informacoes sao obtidas pelo firebase.
+    :return: lista contendo as refeicoes em dicionarios.
+    """
 
 
     # so faz request pro firebase se nao tiver o json.
@@ -193,7 +203,10 @@ def use_parser():
 # cache com timeout de 60min para limitar requests ao API da UNICAMP.
 def get_all_cardapios(raw_json=None):
     """
-    Entrypoint que fornece uma lista de objetos Cardapio realizando um request para o webservices da Unicamp.
+    Fornece uma lista de objetos Cardapio (contendo todos os cardapios disponiveis). O JSON com as informacoes e obtido pelo firebase e passa por um processo de "limpeza". Esse JSON e obtido pelo API da Unicamp e salvo no firebase utilizando a funcao `request_data_from_unicamp` (mais informacoes la).
+    Como o modulo `heroku_cache.py` faz o request pra Unicamp e serializa os objetos logo depois, eu coloquei um parametro opcional `raw_json` que pode ser passado para que um request para o firebase nao precise ser feito desnecessariamente.
+
+    :param raw_json:
     :return: lista com os cardapios disponiveis ja em objetos da classe Cardapio.
     """
     refeicoes_list = request_cardapio(raw_json) # faz o request e recebe uma lista contendo as refeicoes em dicionarios.
