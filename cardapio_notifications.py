@@ -71,9 +71,11 @@ curl -X PUT -H "Content-Type: application/json" -d '{"token":"e77c39f01e46911ae2
 # Metodos relacionados ao armazenamento dos iOS Device Tokens, fornecidos pelos devices ao se registrarem para Push Notifications.
 
 
-def update_or_create_token(token, vegetariano, almoco="11:00", jantar="17:00"):
+def update_or_create_token(token, vegetariano, notificacao_almoco="11:00", notificacao_jantar="17:00"):
     """
     Registra device token ou atualiza os seus parametros "last_used" e/ou "vegetariano".
+
+    Acho que tenho que deixas os valores default do almoco e janta como os originais, para manter as notificacoes dos usuarios que nao atualizarem o app.
 
     :param token: token a ser registrado ou atualizado.
     :param vegetariano: preferencia de cardapio do usuario.
@@ -81,11 +83,11 @@ def update_or_create_token(token, vegetariano, almoco="11:00", jantar="17:00"):
     """
     new_dict = {"last_used": date.today().strftime("%y-%m-%d"), "vegetariano": vegetariano }
 
-    if almoco is not None:
-        new_dict["almoco"] = almoco
+    if notificacao_almoco is not None:
+        new_dict["almoco"] = notificacao_almoco
 
-    if jantar is not None:
-        new_dict["jantar"] = jantar
+    if notificacao_jantar is not None:
+        new_dict["jantar"] = notificacao_jantar
 
 
 
