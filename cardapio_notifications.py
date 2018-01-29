@@ -11,6 +11,7 @@ import pytz
 
 from persistence import environment_vars
 
+from pprint import pprint
 
 """
 
@@ -141,6 +142,7 @@ def same_time_with_margin(hora):
     hours, minutes = map(int, hora.split(':'))
     minutes_notification = hours * 60 + minutes
 
+    print(hora, "{}:{}".format(today.hour, today.minute))
     return abs(minutes_today - minutes_notification) <= 3
 
 
@@ -157,6 +159,8 @@ def get_device_tokens(refeicao):
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
+    pprint("All tokens: {}".format(tokens))
+
     if refeicao == "almoço":
         refeicao = "almoco" # consertando inconsistencia nos nomes de chaves e da mensagem...
 
@@ -168,7 +172,7 @@ def get_device_tokens(refeicao):
         return [], []
 
 
-
+    pprint("Tokens filtrados pelo horario da notificacao: {}".format(tokens))
 
 
     # separa usuarios vegetarianos
@@ -258,7 +262,9 @@ def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
 
 
     client = setup_apns_client(use_sandbox)
-    client.send_notification_batch(notifications, topic)
+    response = client.send_notification_batch(notifications, topic)
+
+    pprint(response)
 
 
     tz = pytz.timezone('America/Sao_Paulo')
@@ -345,8 +351,14 @@ def testar_notificacao():
     tradicional = template.format(cardapio.almoco.prato_principal.lower(), "almoço")
     vegetariano = template.format(cardapio.almoco_vegetariano.prato_principal.lower(), "almoço")
 
+    tz = pytz.timezone('America/Sao_Paulo')
+    today = datetime.now(tz)
+    hour = today.hour
 
-    refeicao = "almoço"
+    if hour >= 7 and hour <= 13:
+        refeicao = "almoço"
+    elif hour >= 14 and hour <= 19:
+        refeicao = "jantar"
 
     push_next_notification(tradicional, vegetariano, refeicao)
 
