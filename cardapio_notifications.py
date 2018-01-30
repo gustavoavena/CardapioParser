@@ -96,6 +96,8 @@ def update_or_create_token(token, vegetariano, notificacao_almoco="11:00", notif
     db.child('tokens').child(token).set(new_dict)
 
 
+
+
     print("Device token {} registrado com sucesso.".format(token))
 
     return True
@@ -159,7 +161,7 @@ def get_device_tokens(refeicao):
     db = setup_firebase()
     tokens = db.child('tokens').get().val()
 
-    pprint("All tokens: {}".format(tokens))
+    # pprint("All tokens: {}".format(tokens))
 
     if refeicao == "almoço":
         refeicao = "almoco" # consertando inconsistencia nos nomes de chaves e da mensagem...
@@ -172,7 +174,7 @@ def get_device_tokens(refeicao):
         return [], []
 
 
-    pprint("Tokens filtrados pelo horario da notificacao: {}".format(tokens))
+    # pprint("Tokens filtrados pelo horario da notificacao: {}".format(tokens))
 
 
     # separa usuarios vegetarianos
@@ -264,14 +266,20 @@ def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
     client = setup_apns_client(use_sandbox)
     response = client.send_notification_batch(notifications, topic)
 
-    pprint(response)
+    # pprint(response)
+
+    successful = [t for t, d in response.items() if d == "Success"]
+    failed = [t for t, d in response.items() if d != "Success"]
+
+
 
 
     tz = pytz.timezone('America/Sao_Paulo')
     today = datetime.now(tz)
     env_name = "[TESTING] " if use_sandbox else ""
 
-    print("{}Push notifications sent on {} to {} devices.".format(env_name, today.strftime("%A, %b %d, %H:%M:%S"), len(notifications)))
+    print("{}Push notifications sent successfully on {} to {} devices.".format(env_name, today.strftime("%A, %b %d, %H:%M:%S"), len(successful)))
+    print("Notifications failed for {} devices.".format(len(failed)))
 
 
 
