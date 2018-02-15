@@ -168,9 +168,10 @@ def get_device_tokens(refeicao):
 
     try:
         # filtra os tokens que devem receber notificacao no momento.
-        tokens = [(t, d) for t, d in tokens.items() if same_time_with_margin(d[refeicao])]
+        tokens = [(t, d) for t, d in tokens.items() if refeicao in d and same_time_with_margin(d[refeicao])]
     except KeyError:
         # o usuario nao quer receber notificacao nessa refeicao.
+        print("KeyError em get_device_token!")
         return [], []
 
 
