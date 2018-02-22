@@ -145,7 +145,7 @@ def same_time_with_margin(hora):
     minutes_notification = hours * 60 + minutes
 
     # print(hora, "{}:{}".format(today.hour, today.minute))
-    return abs(minutes_today - minutes_notification) <= 3
+    return abs(minutes_today - minutes_notification) <= 5
 
 
 
