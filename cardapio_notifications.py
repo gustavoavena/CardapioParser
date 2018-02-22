@@ -282,6 +282,9 @@ def push_next_notification(msg_tradicional, msg_vegetariano, refeicao):
     print("{}Push notifications sent successfully on {} to {} devices.".format(env_name, today.strftime("%A, %b %d, %H:%M:%S"), len(successful)))
     print("Notifications failed for {} devices.".format(len(failed)))
 
+    if(len(failed) > 0):
+        pprint([d for t, d in response.items() if d != "Success"])
+
 
 
 
