@@ -32,7 +32,7 @@ pyasn1==0.3.1
 pyasn1-modules==0.0.10
 pycparser==2.18
 pycryptodome==3.4.3
-PyJWT==1.5.3
+PyJWT==2.4.0
 pyparsing==2.2.0
 Pyrebase==3.0.27
 python-jwt==2.0.1
